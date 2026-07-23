@@ -8,7 +8,7 @@ public class Message{
 
     @Bean
     public String display(){
-        return "Hello, World!";
+        return "Hello Spring!";
     }
 }
 

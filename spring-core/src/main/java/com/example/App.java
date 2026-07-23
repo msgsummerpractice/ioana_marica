@@ -1,19 +1,21 @@
 package com.example;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 
-@Configuration
-@ComponentScan(basePackages = "com.example")
 public class App 
 {
     public static void main(String[] args) {
+        //@Autowired and @Qualifier demonstration
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        DocumentsService documentsService = context.getBean(DocumentsService.class);
+        documentsService.processDocument();
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(Message.class);
-        Message message = context.getBean(Message.class);
-        System.out.println(message.display());
+        //@Autowired and @Component demonstration with constructor injection
+        Car car = context.getBean(Car.class);
+        car.drive();
 
+        ((AnnotationConfigApplicationContext) context).close();
+        
     }
 }
