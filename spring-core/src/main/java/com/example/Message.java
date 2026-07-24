@@ -1,14 +1,8 @@
 package com.example;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+public class Message {
 
-@Configuration
-public class Message{
-
-    @Bean
-    public String display(){
+    public String display() {
         return "Hello Spring!";
     }
 }
-
