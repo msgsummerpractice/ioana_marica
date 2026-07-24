@@ -7,7 +7,7 @@ import com.example.demo.model.User;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements IService<User> {
     @Autowired
     private final UserRepository userRepository;
 
@@ -15,7 +15,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
+    @Override
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 

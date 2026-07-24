@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import com.example.demo.model.User;
 
 @Repository
-public class UserRepository {
+public class UserRepository implements IRepository<User> {
     private List<User> users = new ArrayList<>();
 
     public UserRepository() {
