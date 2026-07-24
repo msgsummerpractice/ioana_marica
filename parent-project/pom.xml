@@ -81,6 +81,20 @@
       </plugins>
     </pluginManagement>
   </build>
+  <profiles>
+  <profile>
+    <id>dev</id>
+    <properties>
+      <env>development</env>
+    </properties>
+  </profile>
+  <profile>
+    <id>prod</id>
+    <properties>
+      <env>production</env>
+    </properties>
+  </profile>
+</profiles>
   <modules>
     <module>core</module>
     <module>service</module>
