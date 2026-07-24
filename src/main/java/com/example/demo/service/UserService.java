@@ -20,4 +20,10 @@ public class UserService implements IService<User> {
         return userRepository.findAll();
     }
 
+    @Override
+    public int count() {
+        List<User> users = userRepository.findAll();
+        return users.size();
+    }
+
 }
