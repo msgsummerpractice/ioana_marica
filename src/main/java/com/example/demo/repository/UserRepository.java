@@ -10,7 +10,7 @@ public class UserRepository implements IRepository<User> {
     private List<User> users = new ArrayList<>();
 
     public UserRepository() {
-        users.add(new User(1, "Alice", -20));
+        users.add(new User(1, "Alice", 20));
         users.add(new User(2, "Bob", 25));
     }
 
