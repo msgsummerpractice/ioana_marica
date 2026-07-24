@@ -25,5 +25,9 @@ public class UserService implements IService<User> {
         List<User> users = userRepository.findAll();
         return users.size();
     }
+    @Override
+    public User saveEntity(User user) {
+        return userRepository.save(user);
+    }
 
 }

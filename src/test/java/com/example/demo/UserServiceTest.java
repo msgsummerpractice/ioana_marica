@@ -24,7 +24,7 @@ public class UserServiceTest {
 
     @Test
     void testCountUsers() {
-        List<User> mockUsers = Arrays.asList(new User("John"), new User("Jane"), new User("Doe"));
+        List<User> mockUsers = Arrays.asList(new User(1, "John", 30), new User(2, "Jane", 25), new User(3, "Doe", 40));
         Mockito.when(mockRepository.findAll()).thenReturn(mockUsers);
         int count = userService.count();
         assertEquals(3, count);
