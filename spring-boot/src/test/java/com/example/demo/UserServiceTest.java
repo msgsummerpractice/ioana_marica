@@ -7,9 +7,9 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.mockito.Mockito;
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
+import com.example.spring_project.model.User;
+import com.example.spring_project.repository.UserRepository;
+import com.example.spring_project.service.UserService;
 
 public class UserServiceTest {
 

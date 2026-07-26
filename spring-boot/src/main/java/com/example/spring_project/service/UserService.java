@@ -1,9 +1,11 @@
-package com.example.demo.service;
+package com.example.spring_project.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.model.User;
+
+import com.example.spring_project.model.User;
+import com.example.spring_project.repository.UserRepository;
+
 import java.util.List;
 
 @Service

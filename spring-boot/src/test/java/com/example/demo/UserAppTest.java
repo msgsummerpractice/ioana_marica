@@ -9,8 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.example.demo.controller.UserController;
-import com.example.demo.service.UserService;
+import com.example.spring_project.controller.UserController;
+import com.example.spring_project.service.UserService;
  
  
 @WebMvcTest(UserController.class)

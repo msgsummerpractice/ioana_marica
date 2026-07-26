@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.spring_project.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,14 +7,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.spring_project.model.User;
+import com.example.spring_project.service.UserService;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.demo.model.User;
 import java.util.List;
-import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid;
 

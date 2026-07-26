@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.spring_project.repository;
 
 import java.util.List;
 

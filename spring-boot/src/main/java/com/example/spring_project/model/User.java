@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.spring_project.model;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

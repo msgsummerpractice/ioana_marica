@@ -1,9 +1,11 @@
-package com.example.demo.repository;
+package com.example.spring_project.repository;
 
 import org.springframework.stereotype.Repository;
+
+import com.example.spring_project.model.User;
+
 import java.util.List;
 import java.util.ArrayList;
-import com.example.demo.model.User;
 
 @Repository
 public class UserRepository implements IRepository<User> {
