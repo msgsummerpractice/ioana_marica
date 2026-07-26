@@ -3,6 +3,7 @@ package com.example.spring_project.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping; 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 
 @RestController
 @RequestMapping("/users")
@@ -34,21 +34,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    //show all users
+    // show all users
     @GetMapping
     public List<User> getAllUsers() {
         logger.info("Fetching all users");
         return userService.getAll();
     }
 
-    //add user
+    // add user
     @PostMapping
     public ResponseEntity<User> addUser(@RequestBody User user) {
         logger.info("Adding a new user: {} {} {}", user.getId(), user.getName(), user.getAge());
         return ResponseEntity.ok(userService.saveEntity(user));
     }
 
-    //delete user
+    // delete user
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         try {
@@ -59,14 +59,18 @@ public class UserController {
         }
     }
 
-    //update user
+    // update user
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id) {
-        User updatedUser = userService.updateEntity(userService.getById(id));
+    public ResponseEntity<User> updateUser(
+            @PathVariable int id,
+            @RequestBody User user) {
+
+        user.setId(id);
+        User updatedUser = userService.updateEntity(user);
         return ResponseEntity.ok(updatedUser);
     }
 
-    //get user by id
+    // get user by id
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         try {
@@ -77,10 +81,25 @@ public class UserController {
         }
     }
 
-    //get users by name
+    // get users by name
     @GetMapping("/name/{name}")
     public List<User> getUsersByName(@PathVariable String name) {
         return userService.getByName(name);
     }
 
+    @Value("${api.version}")
+    private String apiVersion;
+
+    @GetMapping("/info")
+    public String getApiVersion() {
+        return "API Version: " + apiVersion;
+    }
+
+    @Value("${app.welcome.message}")
+    private String welcomeMessage;
+
+    @GetMapping("/welcome")
+    public String getWelcomeMessage() {
+        return welcomeMessage;
+    }
 }

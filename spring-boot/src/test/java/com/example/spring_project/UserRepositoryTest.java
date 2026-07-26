@@ -43,4 +43,6 @@ public class UserRepositoryTest {
             assert(e instanceof jakarta.validation.ConstraintViolationException);
         }
     }
+
+   
 }
