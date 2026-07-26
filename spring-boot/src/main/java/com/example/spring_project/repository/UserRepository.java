@@ -1,31 +1,15 @@
 package com.example.spring_project.repository;
 
-import org.springframework.stereotype.Repository;
-
-import com.example.spring_project.model.User;
-
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Optional;
 
-@Repository
-public class UserRepository implements IRepository<User> {
-    private List<User> users = new ArrayList<>();
+public interface UserRepository<T> {
+    public List<T> findAll();
 
-    public UserRepository() {
-        users.add(new User(1, "Alice", 20));
-        users.add(new User(2, "Bob", 25));
-    }
-
-    public List<User> findAll() {
-        if (users == null) {
-            users = new ArrayList<>();
-        }
-        return users;
-    }
-
-    public User save(User user) {
-        users.add(user);
-        return user;
-    }
-
+    public T save(T t);
+    public Optional<T> update(T t);
+    public boolean delete(T t);
+    public Optional<T> getById(int id);
+    public List<T> getByName(String name);
+ 
 }

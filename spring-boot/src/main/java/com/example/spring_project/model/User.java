@@ -3,7 +3,6 @@ package com.example.spring_project.model;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Value;
 
 public class User {
 
@@ -12,6 +11,7 @@ public class User {
     @NotBlank(message = "Name cannot be blank")
     private String name;
     @NotNull(message = "Age cannot be blank")
+    @Min(value = 0, message = "Age must be a non-negative integer")
     private int age;
 
     public User() {

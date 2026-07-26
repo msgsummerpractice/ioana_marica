@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.spring_project;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,16 +8,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.mockito.Mockito;
 
 import com.example.spring_project.model.User;
-import com.example.spring_project.repository.UserRepository;
+import com.example.spring_project.repository.UserRepositoryImpl;
 
 public class UserRepositoryTest {
 
-    private UserRepository mockRepository;
-    private UserRepository userRepository;
+    private UserRepositoryImpl mockRepository;
+    private UserRepositoryImpl userRepository;
 
     @BeforeEach
     void setUp() {
-        mockRepository = Mockito.mock(UserRepository.class);
+        mockRepository = Mockito.mock(UserRepositoryImpl.class);
         userRepository = mockRepository;
     }
 
