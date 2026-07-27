@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -113,6 +114,18 @@ public class UserController {
     public int countUsers() {
         logger.info("Counting total number of users");
         return userService.countUsers();
+    }
+
+    // update user email by id
+    @PatchMapping("/{id}/email")
+    public ResponseEntity<User> updateEmailById(@PathVariable int id, @RequestParam String email) {
+        try {
+            User updatedUser = userService.updateEmailById(id, email);
+            logger.info("Updated email for user with id: {} to {}", id, email);
+            return ResponseEntity.ok(updatedUser);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Value("${api.version}")

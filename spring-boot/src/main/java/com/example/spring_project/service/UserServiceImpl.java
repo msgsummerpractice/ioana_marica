@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService<User> {
     @Override
     public User getByEmail(String email) {
         return userRepository.getByEmail(email);
+        
     }
 
     @Override
@@ -72,6 +73,15 @@ public class UserServiceImpl implements UserService<User> {
     @Override
     public int countUsers() {
         return userRepository.countUsers();
+    }
+
+    @Override
+    public User updateEmailById(int id, String email) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User with ID " + id + " does not exist."));
+
+        existingUser.setEmail(email);
+        return userRepository.save(existingUser);
     }
 
 }
