@@ -20,4 +20,6 @@ public interface UserService<T> {
     public List<T> findTop10ByOrderByUsernameAsc();
 
     public int countUsers();
+
+    public T updateEmailById(int id, String email);
 }

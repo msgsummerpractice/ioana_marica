@@ -42,14 +42,15 @@ public class UserController {
     @GetMapping
     public List<User> getAllUsers() {
         logger.info("Fetching all users");
-        return userService.getAll();
+        return ResponseEntity.ok(userService.getAll()).getBody();
     }
 
     // add user
     @PostMapping
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         logger.info("Adding a new user: {} {} {} {} {} {}", user.getId(), user.getUsername(),user.getPassword(), user.getEmail(), user.getFirstName(), user.getLastName());
-        return ResponseEntity.ok(userService.saveEntity(user));
+         User savedUser = userService.saveEntity(user);
+         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     // delete user
@@ -58,9 +59,9 @@ public class UserController {
         try {
             userService.deleteEntityByID(id);
             logger.info("Deleted user with id: {}", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -92,28 +93,28 @@ public class UserController {
     @GetMapping(params = "email")
     public User getUserByEmail(@RequestParam String email) {
         logger.info("Fetching user with email: {}", email);
-        return userService.getByEmail(email);
+        return ResponseEntity.ok(userService.getByEmail(email)).getBody();
     }
 
     // get user by username
     @GetMapping(params = "username")
     public User getUserByUsername(@RequestParam String username) {
         logger.info("Fetching user with username: {}", username);
-        return userService.getByUsername(username);
+        return ResponseEntity.ok(userService.getByUsername(username)).getBody();
     }
 
     // get top 10 users ordered by username
     @GetMapping("/top10")
     public List<User> getTop10Users() {
         logger.info("Fetching top 10 users ordered by username");
-        return userService.findTop10ByOrderByUsernameAsc();
+        return ResponseEntity.ok(userService.findTop10ByOrderByUsernameAsc()).getBody();
     }
 
     // count total number of users
     @GetMapping("/count")
     public int countUsers() {
         logger.info("Counting total number of users");
-        return userService.countUsers();
+        return ResponseEntity.ok(userService.countUsers()).getBody();
     }
 
     // update user email by id
