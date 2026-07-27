@@ -3,16 +3,16 @@ package com.example.spring_project.service;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 import com.example.spring_project.model.User;
-import com.example.spring_project.repository.UserRepositoryImpl;
+import com.example.spring_project.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService<User> {
 
-    private final UserRepositoryImpl userRepository;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepositoryImpl userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -28,27 +28,40 @@ public class UserServiceImpl implements UserService<User> {
 
     @Override
     public User updateEntity(User user) {
-        return userRepository.update(user)
-        .orElseThrow(() -> new NoSuchElementException("User with ID " + user.getId() + " does not exist."));
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new NoSuchElementException("User with ID " + user.getId() + " does not exist."));
+
+        existingUser.setUsername(user.getUsername());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+
+        return userRepository.save(existingUser);
     }
 
     @Override
-    public void deleteEntity(User user) {
-        boolean removed = userRepository.delete(user);
-        if (!removed) {
-            throw new NoSuchElementException("User with ID " + user.getId() + " does not exist.");
+    public void deleteEntityByID(int id) {
+        if (!userRepository.existsById(id)) {
+            throw new NoSuchElementException("User with ID " + id + " does not exist.");
         }
+        userRepository.deleteById(id);
     }
 
     @Override
     public User getById(int id) {
-        return userRepository.getById(id)
-        .orElseThrow(() -> new NoSuchElementException("User with ID " + id + " does not exist."));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User with ID " + id + " does not exist."));
     }
 
     @Override
-    public List<User> getByName(String name) {
-        return userRepository.getByName(name);
+    public User getByEmail(String email) {
+        return userRepository.getByEmail(email);
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        return userRepository.getByUsername(username);
     }
 
 }

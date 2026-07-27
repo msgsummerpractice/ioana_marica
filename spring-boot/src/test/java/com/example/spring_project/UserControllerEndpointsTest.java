@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,10 +66,10 @@ public class UserControllerEndpointsTest {
 
       @Test
       public void testDeleteUserEndpoint() throws Exception {
-            doNothing().when(userService).deleteEntity(any());
+            doNothing().when(userService).deleteEntityByID(eq(1));
             mvc.perform(delete("/users/1"))
                         .andExpect(status().isNoContent());
-            verify(userService).deleteEntity(any());
+            verify(userService).deleteEntityByID(eq(1));
       }
 
       @Test
@@ -103,17 +104,26 @@ public class UserControllerEndpointsTest {
       }
 
       @Test
-      public void testGetUsersByNameEndpoint() throws Exception {
-            when(userService.getByName("John123"))
-                        .thenReturn(Collections.singletonList(
-                                    new User(1, "John123", "password123", "john@example.com", "John", "Doe")));
+      public void testGetUsersByEmaiEndpoint() throws Exception {
+            when(userService.getByEmail("john@example.com"))
+                        .thenReturn(new User(1, "John123", "password123", "john@example.com", "John", "Doe"));
+            mvc.perform(get("/users")
+                        .param("email", "john@example.com"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON));
 
+            verify(userService).getByEmail("john@example.com");
+      }
+
+      @Test
+      public void testGetUsersByUsernameEndpoint() throws Exception {
+            when(userService.getByUsername("John123"))
+                        .thenReturn(new User(1, "John123", "password123", "john@example.com", "John", "Doe"));
             mvc.perform(get("/users")
                         .param("username", "John123"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON));
 
-            verify(userService).getByName("John123");
+            verify(userService).getByUsername("John123");
       }
-
 }

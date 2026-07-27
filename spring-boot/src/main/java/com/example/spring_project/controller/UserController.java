@@ -47,7 +47,7 @@ public class UserController {
     // add user
     @PostMapping
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        logger.info("Adding a new user: {} {} {} {} {}", user.getId(), user.getUsername(),user.getPassword(), user.getEmail(), user.getFirstName(), user.getLastName());
+        logger.info("Adding a new user: {} {} {} {} {} {}", user.getId(), user.getUsername(),user.getPassword(), user.getEmail(), user.getFirstName(), user.getLastName());
         return ResponseEntity.ok(userService.saveEntity(user));
     }
 
@@ -55,7 +55,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         try {
-            userService.deleteEntity(userService.getById(id));
+            userService.deleteEntityByID(id);
             logger.info("Deleted user with id: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (NoSuchElementException e) {
@@ -87,11 +87,17 @@ public class UserController {
         }
     }
 
-    // get users by name
+    // get user by email
+    @GetMapping(params = "email")
+    public User getUserByEmail(@RequestParam String email) {
+        logger.info("Fetching user with email: {}", email);
+        return userService.getByEmail(email);
+    }
+
     @GetMapping(params = "username")
-    public List<User> getUsersByName(@RequestParam String username) {
-        logger.info("Fetching users with user name: {}", username);
-        return userService.getByName(username);
+    public User getUserByUsername(@RequestParam String username) {
+        logger.info("Fetching user with username: {}", username);
+        return userService.getByUsername(username);
     }
 
     @Value("${api.version}")
