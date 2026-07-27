@@ -126,4 +126,24 @@ public class UserControllerEndpointsTest {
 
             verify(userService).getByUsername("John123");
       }
+
+      @Test
+      public void testGetTop10UsersEndpoint() throws Exception {
+            when(userService.findTop10ByOrderByUsernameAsc())
+                        .thenReturn(Collections.emptyList());
+            mvc.perform(get("/users/top10"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON));
+            verify(userService).findTop10ByOrderByUsernameAsc();
+      }
+
+      @Test
+      public void testCountUsersEndpoint() throws Exception {
+            when(userService.countUsers()).thenReturn(5);
+            mvc.perform(get("/users/count"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().string("5"));
+            verify(userService).countUsers();
+      }
+      
 }

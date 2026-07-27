@@ -16,4 +16,8 @@ public interface UserService<T> {
     public T getByEmail(String email);
 
     public T getByUsername(String username);
+
+    public List<T> findTop10ByOrderByUsernameAsc();
+
+    public int countUsers();
 }

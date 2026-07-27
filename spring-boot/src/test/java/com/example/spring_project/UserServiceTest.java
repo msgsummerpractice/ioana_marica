@@ -1,7 +1,8 @@
 package com.example.spring_project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import java.util.List;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -90,4 +91,39 @@ class UserServiceTest {
         Mockito.verify(userRepository)
                 .getByEmail("john@example.com");
     }
+
+    @Test
+    void testGetUserByUsername() {
+        User user = new User(
+                1,
+                "John123",
+                "password123",
+                "john@example.com",
+                "John",
+                "Doe");
+        Mockito.when(userRepository.getByUsername("John123"))
+                .thenReturn(user);
+        User result = userService.getByUsername("John123");
+        assertEquals(user, result);
+        Mockito.verify(userRepository)
+                .getByUsername("John123");
+    }
+
+    @Test
+    void testFindTop10ByOrderByUsernameAsc() {
+        List<User> mockUsers = Arrays.asList(
+                new User(1, "Alice", "password1", "alice@example.com", "Alice", "Smith"),
+                new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson"));
+        Mockito.when(userRepository.findTop10ByOrderByUsernameAsc()).thenReturn(mockUsers);
+        List<User> result = userService.findTop10ByOrderByUsernameAsc();
+        assertEquals(mockUsers, result);
+    }
+
+    @Test
+    void testCountUsers() {
+        Mockito.when(userRepository.countUsers()).thenReturn(5);
+        int result = userService.countUsers();
+        assertEquals(5, result);
+    }
+
 }

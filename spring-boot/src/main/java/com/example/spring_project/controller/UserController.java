@@ -94,10 +94,25 @@ public class UserController {
         return userService.getByEmail(email);
     }
 
+    // get user by username
     @GetMapping(params = "username")
     public User getUserByUsername(@RequestParam String username) {
         logger.info("Fetching user with username: {}", username);
         return userService.getByUsername(username);
+    }
+
+    // get top 10 users ordered by username
+    @GetMapping("/top10")
+    public List<User> getTop10Users() {
+        logger.info("Fetching top 10 users ordered by username");
+        return userService.findTop10ByOrderByUsernameAsc();
+    }
+
+    // count total number of users
+    @GetMapping("/count")
+    public int countUsers() {
+        logger.info("Counting total number of users");
+        return userService.countUsers();
     }
 
     @Value("${api.version}")

@@ -71,4 +71,22 @@ class UserRepositoryTest {
         assertEquals("JohnUpdated", result.getUsername());
     }
 
+    @Test
+    void testCountUsers() {
+        Mockito.when(mockRepository.countUsers()).thenReturn(5);
+        int result = mockRepository.countUsers();
+        assertEquals(5, result);
+    }
+
+    @Test
+    void testFindTop10ByOrderByUsernameAsc() {
+        List<User> mockUsers = Arrays.asList(
+                new User(1, "Alice", "password1", "alice@example.com", "Alice", "Smith"),
+                new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson")
+        );
+        Mockito.when(mockRepository.findTop10ByOrderByUsernameAsc()).thenReturn(mockUsers);
+        List<User> result = mockRepository.findTop10ByOrderByUsernameAsc();
+        assertEquals(mockUsers, result);
+    }
+
 }

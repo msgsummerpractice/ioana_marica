@@ -64,4 +64,14 @@ public class UserServiceImpl implements UserService<User> {
         return userRepository.getByUsername(username);
     }
 
+    @Override
+    public List<User> findTop10ByOrderByUsernameAsc() {
+        return userRepository.findTop10ByOrderByUsernameAsc();
+    }
+
+    @Override
+    public int countUsers() {
+        return userRepository.countUsers();
+    }
+
 }
