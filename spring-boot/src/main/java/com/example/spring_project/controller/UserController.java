@@ -13,6 +13,8 @@ import com.example.spring_project.dto.response.UserResponse;
 import com.example.spring_project.service.UserServiceImpl;
 
 import jakarta.validation.Valid;
+
+import com.example.spring_project.dto.request.DeleteUserRequest;
 import com.example.spring_project.dto.request.UpdateUserRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,8 +53,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@RequestBody UserRequest request) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(
+            @Valid @RequestBody DeleteUserRequest request) {
+
         try {
             userService.deleteEntityByID(request);
             return ResponseEntity.noContent().build();
@@ -61,9 +65,10 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<UserResponse> updateUser(
             @Valid @RequestBody UserRequest request) {
+
         UserResponse response = userService.updateEntity(request);
         return ResponseEntity.ok(response);
     }
