@@ -89,9 +89,9 @@ public class UserController {
 
     // get users by name
     @GetMapping(params = "username")
-    public List<User> getUsersByName(@RequestParam String name) {
-        logger.info("Fetching users with user name: {}", name);
-        return userService.getByName(name);
+    public List<User> getUsersByName(@RequestParam String username) {
+        logger.info("Fetching users with user name: {}", username);
+        return userService.getByName(username);
     }
 
     @Value("${api.version}")
