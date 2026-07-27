@@ -2,6 +2,7 @@ package com.example.spring_project;
 
 import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.dto.response.UserResponse;
+import com.example.spring_project.mapper.UserMapper;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
 import com.example.spring_project.service.UserServiceImpl;
@@ -23,12 +24,14 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
+    private UserMapper userMapper;
     private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userRepository);
+         userMapper = new UserMapper();
+        userService = new UserServiceImpl(userRepository, userMapper);
+        
     }
 
     @Test

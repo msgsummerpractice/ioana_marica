@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import com.example.spring_project.dto.request.UpdateUserRequest;
 import com.example.spring_project.dto.request.DeleteUserRequest;
 import com.example.spring_project.dto.response.UserResponse;
+import com.example.spring_project.mapper.UserMapper;
 import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
@@ -16,18 +17,12 @@ public class UserServiceImpl implements UserService<User> {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final UserMapper userMapper;
+
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
-    }
-
-    private UserResponse convertToResponse(User user) {
-
-        return new UserResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName());
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -35,7 +30,7 @@ public class UserServiceImpl implements UserService<User> {
 
         return userRepository.findAll()
                 .stream()
-                .map(this::convertToResponse)
+                .map(userMapper::toResponse)
                 .toList();
     }
 
@@ -53,7 +48,7 @@ public class UserServiceImpl implements UserService<User> {
 
         User savedUser = userRepository.save(user);
 
-        return convertToResponse(savedUser);
+        return userMapper.toResponse(savedUser);
     }
 
     @Override
@@ -70,7 +65,7 @@ public class UserServiceImpl implements UserService<User> {
 
         User updatedUser = userRepository.save(existingUser);
 
-        return convertToResponse(updatedUser);
+        return userMapper.toResponse(updatedUser);
     }
 
     @Override
@@ -89,7 +84,7 @@ public class UserServiceImpl implements UserService<User> {
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        return convertToResponse(user);
+        return userMapper.toResponse(user);
     }
 
     @Override
@@ -101,7 +96,7 @@ public class UserServiceImpl implements UserService<User> {
             throw new NoSuchElementException("User not found");
         }
 
-        return convertToResponse(user);
+        return userMapper.toResponse(user);
     }
 
     @Override
@@ -113,7 +108,7 @@ public class UserServiceImpl implements UserService<User> {
             throw new NoSuchElementException("User not found");
         }
 
-        return convertToResponse(user);
+        return userMapper.toResponse(user);
     }
 
     @Override
@@ -121,7 +116,7 @@ public class UserServiceImpl implements UserService<User> {
 
         return userRepository.findTop10ByOrderByUsernameAsc()
                 .stream()
-                .map(this::convertToResponse)
+                .map(userMapper::toResponse)
                 .limit(10)
                 .toList();
 
@@ -143,6 +138,6 @@ public class UserServiceImpl implements UserService<User> {
 
         User updatedUser = userRepository.save(user);
 
-        return convertToResponse(updatedUser);
+        return userMapper.toResponse(updatedUser);
     }
 }
