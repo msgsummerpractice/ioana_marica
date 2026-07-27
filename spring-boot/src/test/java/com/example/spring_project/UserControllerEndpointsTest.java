@@ -80,24 +80,18 @@ public class UserControllerEndpointsTest {
 
       @Test
       void testDeleteUserEndpoint() throws Exception {
-            doNothing().when(userService).deleteEntityByID(any(UserRequest.class));
+            doNothing().when(userService).deleteEntityByID(any());
 
-            mvc.perform(delete("/users/1")
+            mvc.perform(delete("/users")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                     {
-                                      "id":1,
-                                      "username":"John123",
-                                      "password":"password123",
-                                      "email":"john@example.com",
-                                      "firstName":"John",
-                                     "lastName":"Doe"
+                                      "id":1
                                     }
                                     """))
                         .andExpect(status().isNoContent());
 
-            verify(userService).deleteEntityByID(any(UserRequest.class));
-
+            verify(userService).deleteEntityByID(any());
       }
 
       @Test

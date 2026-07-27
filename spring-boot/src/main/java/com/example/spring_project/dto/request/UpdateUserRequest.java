@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
         @NotNull(message = "Email cannot be null")
         private String email;
 
-        @NotNull(message = "Username cannot be null")
-        private int id;
+        private Integer id;
 
     }
 

@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserRequest {
 
-    @NotNull(message = "Username cannot be null")
-    private int id;
+    private Integer id;
 
     @NotNull(message = "Username cannot be null")
     private String username;
