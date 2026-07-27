@@ -43,7 +43,7 @@ public class UserControllerEndpointsTest {
 
       @Test
       public void testAddUserEndpoint() throws Exception {
-            User user = new User(1, "John Doe", 30);
+            User user = new User(1, "John123", "password123", "john@example.com", "John", "Doe");
             when(userService.saveEntity(any(User.class)))
                         .thenReturn(user);
             mvc.perform(post("/users")
@@ -51,8 +51,11 @@ public class UserControllerEndpointsTest {
                         .content("""
                                     {
                                         "id":1,
-                                        "name":"John Doe",
-                                        "age":30
+                                        "username":"John123",
+                                        "password":"password123",
+                                        "email":"john@example.com",
+                                        "firstName":"John",
+                                        "lastName":"Doe"
                                     }
                                     """))
                         .andExpect(status().isOk())
@@ -70,7 +73,7 @@ public class UserControllerEndpointsTest {
 
       @Test
       public void testUpdateUserEndpoint() throws Exception {
-            User user = new User(1, "John Doe", 30);
+            User user = new User(1, "John123", "password123", "john@example.com", "John", "Doe");
             when(userService.updateEntity(any(User.class)))
                         .thenReturn(user);
             mvc.perform(put("/users/1")
@@ -78,8 +81,11 @@ public class UserControllerEndpointsTest {
                         .content("""
                                     {
                                         "id":1,
-                                        "name":"John Doe",
-                                        "age":30
+                                        "username":"John123",
+                                        "password":"password123",
+                                        "email":"john@example.com",
+                                        "firstName":"John",
+                                        "lastName":"Doe"
                                     }
                                     """))
                         .andExpect(status().isOk());
@@ -89,7 +95,7 @@ public class UserControllerEndpointsTest {
       @Test
       public void testGetUserByIdEndpoint() throws Exception {
             when(userService.getById(1))
-                        .thenReturn(new User(1, "John Doe", 30));
+                        .thenReturn(new User(1, "John123", "password123", "john@example.com", "John", "Doe"));
             mvc.perform(get("/users/1"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON));
@@ -98,16 +104,16 @@ public class UserControllerEndpointsTest {
 
       @Test
       public void testGetUsersByNameEndpoint() throws Exception {
-            when(userService.getByName("John"))
+            when(userService.getByName("John123"))
                         .thenReturn(Collections.singletonList(
-                                    new User(1, "John Doe", 30)));
+                                    new User(1, "John123", "password123", "john@example.com", "John", "Doe")));
 
             mvc.perform(get("/users")
-                        .param("name", "John"))
+                        .param("username", "John123"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON));
 
-            verify(userService).getByName("John");
+            verify(userService).getByName("John123");
       }
 
 }

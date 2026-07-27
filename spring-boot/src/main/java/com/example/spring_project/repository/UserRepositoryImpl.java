@@ -12,8 +12,8 @@ public class UserRepositoryImpl implements UserRepository<User> {
     private List<User> users = new ArrayList<>();
 
     public UserRepositoryImpl() {
-        users.add(new User(1, "Alice", 20));
-        users.add(new User(2, "Bob", 25));
+        users.add(new User(1, "Alice123", "password1","alice@gmail.com", "Alice", "Smith"));
+        users.add(new User(2, "Bob456", "password2", "bob@gmail.com", "Bob", "Johnson"));
     }
 
     @Override
@@ -35,8 +35,11 @@ public class UserRepositoryImpl implements UserRepository<User> {
         return users.stream().filter(u -> u.getId() == user.getId())
         .findFirst()
         .map(foundUser -> {
-            foundUser.setName(user.getName());
-            foundUser.setAge(user.getAge());
+            foundUser.setUsername(user.getUsername());
+            foundUser.setPassword(user.getPassword());
+            foundUser.setEmail(user.getEmail());
+            foundUser.setFirstName(user.getFirstName());
+            foundUser.setLastName(user.getLastName());
             return foundUser;
         });
     }
@@ -53,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository<User> {
 
     @Override
     public List<User> getByName(String name) {  
-        return users.stream().filter(u -> u.getName().equalsIgnoreCase(name)).toList();
+        return users.stream().filter(u -> u.getUsername().equalsIgnoreCase(name)).toList();
     }
 
             

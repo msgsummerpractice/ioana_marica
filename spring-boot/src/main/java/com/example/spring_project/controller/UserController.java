@@ -47,7 +47,7 @@ public class UserController {
     // add user
     @PostMapping
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        logger.info("Adding a new user: {} {} {}", user.getId(), user.getName(), user.getAge());
+        logger.info("Adding a new user: {} {} {} {} {}", user.getId(), user.getUsername(),user.getPassword(), user.getEmail(), user.getFirstName(), user.getLastName());
         return ResponseEntity.ok(userService.saveEntity(user));
     }
 
@@ -71,7 +71,7 @@ public class UserController {
 
         user.setId(id);
         User updatedUser = userService.updateEntity(user);
-        logger.info("Updated user with id: {} to {} {}", id, updatedUser.getName(), updatedUser.getAge());
+        logger.info("Updated user with id: {} to {} {} {} {} {}", id, updatedUser.getUsername(), updatedUser.getPassword(),updatedUser.getEmail(), updatedUser.getFirstName(), updatedUser.getLastName());
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -80,7 +80,7 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         try {
             User user = userService.getById(id);
-            logger.info("Fetched user with id: {} {} {}", user.getId(), user.getName(), user.getAge());
+            logger.info("Fetched user with id: {} {} {} {} {} {}", user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getFirstName(), user.getLastName());
             return ResponseEntity.ok(user);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -88,9 +88,9 @@ public class UserController {
     }
 
     // get users by name
-    @GetMapping(params = "name")
+    @GetMapping(params = "username")
     public List<User> getUsersByName(@RequestParam String name) {
-        logger.info("Fetching users with name: {}", name);
+        logger.info("Fetching users with user name: {}", name);
         return userService.getByName(name);
     }
 

@@ -23,7 +23,7 @@ public class UserRepositoryTest {
 
     @Test
     void testGetAllUsers() {
-        List<User> mockUsers = Arrays.asList(new User(1, "John", 30), new User(2, "Jane", 25));
+        List<User> mockUsers = Arrays.asList(new User(1,"John123", "password123", "john@example.com", "John", "Doe"), new User(2, "Jane", "password456", "jane@example.com", "Jane", "Smith"));
         Mockito.when(mockRepository.findAll()).thenReturn(mockUsers);
         List<User> result = userRepository.findAll();
         assertEquals(mockUsers, result);
@@ -31,12 +31,12 @@ public class UserRepositoryTest {
 
     @Test
     void testSaveUser() {
-        User newUser = new User(3, "Doe", 40);
+        User newUser = new User(3, "Alice", "password789", "alice@example.com", "Alice", "Doe");
         Mockito.when(mockRepository.save(newUser)).thenReturn(newUser);
         User result = userRepository.save(newUser);
         assertEquals(newUser, result);
 
-        User newUser2 = new User(6, "Smith", -35);
+        User newUser2 = new User(6, "Bob", "password000", "bob@example.com", "Bob", "Smith");
         try {
             userRepository.save(newUser2);
         } catch (Exception e) {
