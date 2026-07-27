@@ -4,7 +4,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.example.spring_project.model.User;
-import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.ArrayList;
 

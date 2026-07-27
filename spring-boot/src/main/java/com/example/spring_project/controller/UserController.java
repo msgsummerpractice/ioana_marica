@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.spring_project.model.User;
 import com.example.spring_project.service.UserServiceImpl;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +46,7 @@ public class UserController {
 
     // add user
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         logger.info("Adding a new user: {} {} {}", user.getId(), user.getName(), user.getAge());
         return ResponseEntity.ok(userService.saveEntity(user));
     }
@@ -53,6 +56,7 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         try {
             userService.deleteEntity(userService.getById(id));
+            logger.info("Deleted user with id: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -61,12 +65,13 @@ public class UserController {
 
     // update user
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<User> updateUser(@Valid
             @PathVariable int id,
             @RequestBody User user) {
 
         user.setId(id);
         User updatedUser = userService.updateEntity(user);
+        logger.info("Updated user with id: {} to {} {}", id, updatedUser.getName(), updatedUser.getAge());
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -75,6 +80,7 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         try {
             User user = userService.getById(id);
+            logger.info("Fetched user with id: {} {} {}", user.getId(), user.getName(), user.getAge());
             return ResponseEntity.ok(user);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -82,8 +88,9 @@ public class UserController {
     }
 
     // get users by name
-    @GetMapping("/name/{name}")
-    public List<User> getUsersByName(@PathVariable String name) {
+    @GetMapping("/name")
+    public List<User> getUsersByName(@RequestParam String name) {
+        logger.info("Fetching users with name: {}", name);
         return userService.getByName(name);
     }
 
