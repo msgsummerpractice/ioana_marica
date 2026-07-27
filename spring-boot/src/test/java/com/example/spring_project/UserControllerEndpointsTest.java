@@ -102,7 +102,7 @@ public class UserControllerEndpointsTest {
                         .thenReturn(Collections.singletonList(
                                     new User(1, "John Doe", 30)));
 
-            mvc.perform(get("/users/name")
+            mvc.perform(get("/users")
                         .param("name", "John"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON));
