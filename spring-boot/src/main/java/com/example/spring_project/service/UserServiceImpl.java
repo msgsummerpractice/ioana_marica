@@ -2,6 +2,10 @@ package com.example.spring_project.service;
 
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
+import com.example.spring_project.dto.request.UpdateUserRequest;
+
+import com.example.spring_project.dto.response.UserResponse;
+import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
 
@@ -16,72 +20,129 @@ public class UserServiceImpl implements UserService<User> {
         this.userRepository = userRepository;
     }
 
-    @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    private UserResponse convertToResponse(User user) {
+
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName());
     }
 
     @Override
-    public User saveEntity(User user) {
-        return userRepository.save(user);
+    public List<UserResponse> getAll() {
+
+        return userRepository.findAll()
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     @Override
-    public User updateEntity(User user) {
-        User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new NoSuchElementException("User with ID " + user.getId() + " does not exist."));
+    public UserResponse saveEntity(UserRequest request) {
 
-        existingUser.setUsername(user.getUsername());
-        existingUser.setPassword(user.getPassword());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
+        User user = new User();
 
-        return userRepository.save(existingUser);
+        user.setId(request.getId());
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+
+        User savedUser = userRepository.save(user);
+
+        return convertToResponse(savedUser);
     }
 
     @Override
-    public void deleteEntityByID(int id) {
-        if (!userRepository.existsById(id)) {
-            throw new NoSuchElementException("User with ID " + id + " does not exist.");
+    public UserResponse updateEntity(UserRequest request) {
+
+        User existingUser = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        existingUser.setUsername(request.getUsername());
+        existingUser.setPassword(request.getPassword());
+        existingUser.setEmail(request.getEmail());
+        existingUser.setFirstName(request.getFirstName());
+        existingUser.setLastName(request.getLastName());
+
+        User updatedUser = userRepository.save(existingUser);
+
+        return convertToResponse(updatedUser);
+    }
+
+    @Override
+    public void deleteEntityByID(UserRequest request) {
+
+        if (!userRepository.existsById(request.getId())) {
+            throw new NoSuchElementException("User not found");
         }
-        userRepository.deleteById(id);
+
+        userRepository.deleteById(request.getId());
     }
 
     @Override
-    public User getById(int id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User with ID " + id + " does not exist."));
+    public UserResponse getById(UserRequest request ) {
+
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        return convertToResponse(user);
     }
 
     @Override
-    public User getByEmail(String email) {
-        return userRepository.getByEmail(email);
-        
+    public UserResponse getByEmail(UserRequest request) {
+
+        User user = userRepository.getByEmail(request.getEmail());
+
+        if (user == null) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        return convertToResponse(user);
     }
 
     @Override
-    public User getByUsername(String username) {
-        return userRepository.getByUsername(username);
+    public UserResponse getByUsername(UserRequest request) {
+
+        User user = userRepository.getByUsername(request.getUsername());
+
+        if (user == null) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        return convertToResponse(user);
     }
 
     @Override
-    public List<User> findTop10ByOrderByUsernameAsc() {
-        return userRepository.findTop10ByOrderByUsernameAsc();
+    public List<UserResponse> findTop10ByOrderByUsernameAsc() {
+
+        return userRepository.findTop10ByOrderByUsernameAsc()
+                .stream()
+                .map(this::convertToResponse)
+                .limit(10)
+                .toList();
+
     }
 
     @Override
     public int countUsers() {
+
         return userRepository.countUsers();
     }
 
     @Override
-    public User updateEmailById(int id, String email) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User with ID " + id + " does not exist."));
+    public UserResponse updateEmailById(UpdateUserRequest request) {
 
-        existingUser.setEmail(email);
-        return userRepository.save(existingUser);
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        user.setEmail(request.getEmail());
+
+        User updatedUser = userRepository.save(user);
+
+        return convertToResponse(updatedUser);
     }
-
 }

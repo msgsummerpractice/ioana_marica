@@ -2,24 +2,28 @@ package com.example.spring_project.service;
 
 import java.util.List;
 
-public interface UserService<T> {
-    public List<T> getAll();
+import com.example.spring_project.dto.request.UpdateUserRequest;
+import com.example.spring_project.dto.request.UserRequest;
+import com.example.spring_project.dto.response.UserResponse;
 
-    public T saveEntity(T entity);
+    public interface UserService<T> {
+    public List<UserResponse> getAll();
 
-    public T updateEntity(T entity);
+    public UserResponse saveEntity(UserRequest request);
 
-    public void deleteEntityByID(int id);
+    public UserResponse updateEntity(UserRequest request);
 
-    public T getById(int id);
+    public void deleteEntityByID(UserRequest request);
 
-    public T getByEmail(String email);
+    public UserResponse getById(UserRequest request);
 
-    public T getByUsername(String username);
+    public UserResponse getByEmail(UserRequest request);
 
-    public List<T> findTop10ByOrderByUsernameAsc();
+    public UserResponse getByUsername(UserRequest request);
+
+    public List<UserResponse> findTop10ByOrderByUsernameAsc();
 
     public int countUsers();
 
-    public T updateEmailById(int id, String email);
+    public UserResponse updateEmailById(UpdateUserRequest request);
 }

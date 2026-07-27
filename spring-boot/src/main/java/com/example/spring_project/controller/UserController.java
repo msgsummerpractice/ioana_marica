@@ -8,16 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.spring_project.model.User;
+import com.example.spring_project.dto.request.UserRequest;
+import com.example.spring_project.dto.response.UserResponse;
 import com.example.spring_project.service.UserServiceImpl;
 
 import jakarta.validation.Valid;
-
+import com.example.spring_project.dto.request.UpdateUserRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,102 +30,88 @@ import java.util.NoSuchElementException;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private final UserServiceImpl userService;
 
     @Autowired
     public UserController(UserServiceImpl userService) {
-        logger.info("UserController initialized");
         this.userService = userService;
     }
 
-    // show all users
     @GetMapping
-    public List<User> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
         logger.info("Fetching all users");
-        return ResponseEntity.ok(userService.getAll()).getBody();
+        return ResponseEntity.ok(userService.getAll());
     }
 
-    // add user
     @PostMapping
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        logger.info("Adding a new user: {} {} {} {} {} {}", user.getId(), user.getUsername(),user.getPassword(), user.getEmail(), user.getFirstName(), user.getLastName());
-         User savedUser = userService.saveEntity(user);
-         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    public ResponseEntity<UserResponse> addUser(@Valid @RequestBody UserRequest request) {
+        logger.info("Adding user {}", request.getUsername());
+        UserResponse response = userService.saveEntity(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // delete user
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+    public ResponseEntity<Void> deleteUser(@RequestBody UserRequest request) {
         try {
-            userService.deleteEntityByID(id);
-            logger.info("Deleted user with id: {}", id);
+            userService.deleteEntityByID(request);
             return ResponseEntity.noContent().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    // update user
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@Valid
-            @PathVariable int id,
-            @RequestBody User user) {
-
-        user.setId(id);
-        User updatedUser = userService.updateEntity(user);
-        logger.info("Updated user with id: {} to {} {} {} {} {}", id, updatedUser.getUsername(), updatedUser.getPassword(),updatedUser.getEmail(), updatedUser.getFirstName(), updatedUser.getLastName());
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<UserResponse> updateUser(
+            @Valid @RequestBody UserRequest request) {
+        UserResponse response = userService.updateEntity(request);
+        return ResponseEntity.ok(response);
     }
 
-    // get user by id
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
+    public ResponseEntity<UserResponse> getUserById(@RequestBody UserRequest request) {
         try {
-            User user = userService.getById(id);
-            logger.info("Fetched user with id: {} {} {} {} {} {}", user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getFirstName(), user.getLastName());
-            return ResponseEntity.ok(user);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userService.getById(request));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    // get user by email
     @GetMapping(params = "email")
-    public User getUserByEmail(@RequestParam String email) {
-        logger.info("Fetching user with email: {}", email);
-        return ResponseEntity.ok(userService.getByEmail(email)).getBody();
-    }
-
-    // get user by username
-    @GetMapping(params = "username")
-    public User getUserByUsername(@RequestParam String username) {
-        logger.info("Fetching user with username: {}", username);
-        return ResponseEntity.ok(userService.getByUsername(username)).getBody();
-    }
-
-    // get top 10 users ordered by username
-    @GetMapping("/top10")
-    public List<User> getTop10Users() {
-        logger.info("Fetching top 10 users ordered by username");
-        return ResponseEntity.ok(userService.findTop10ByOrderByUsernameAsc()).getBody();
-    }
-
-    // count total number of users
-    @GetMapping("/count")
-    public int countUsers() {
-        logger.info("Counting total number of users");
-        return ResponseEntity.ok(userService.countUsers()).getBody();
-    }
-
-    // update user email by id
-    @PatchMapping("/{id}/email")
-    public ResponseEntity<User> updateEmailById(@PathVariable int id, @RequestParam String email) {
+    public ResponseEntity<UserResponse> getUserByEmail(@RequestBody UserRequest request) {
         try {
-            User updatedUser = userService.updateEmailById(id, email);
-            logger.info("Updated email for user with id: {} to {}", id, email);
-            return ResponseEntity.ok(updatedUser);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userService.getByEmail(request));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(params = "username")
+    public ResponseEntity<UserResponse> getUserByUsername(@RequestBody UserRequest request) {
+        try {
+            return ResponseEntity.ok(userService.getByUsername(request));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/top10")
+    public ResponseEntity<List<UserResponse>> getTop10Users() {
+        return ResponseEntity.ok(userService.findTop10ByOrderByUsernameAsc());
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countUsers() {
+        return ResponseEntity.ok(userService.countUsers());
+    }
+
+    @PatchMapping("/{id}/email")
+    public ResponseEntity<UserResponse> updateEmailById(@Valid @RequestBody UpdateUserRequest request) {
+
+        try {
+            return ResponseEntity.ok(userService.updateEmailById(request));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
         }
     }
 
