@@ -2,6 +2,7 @@ package com.example.spring_project.controller;
 
 import com.example.spring_project.dto.request.UpdateUserRequest;
 import com.example.spring_project.dto.request.UserRequest;
+import org.springframework.http.MediaType;
 import com.example.spring_project.dto.response.UserResponse;
 import com.example.spring_project.mapper.UserMapper;
 import com.example.spring_project.model.User;
@@ -35,13 +36,14 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         logger.info("Fetching all users");
         return ResponseEntity.ok(userService.getAll());
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
+                 produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponse> addUser(@Valid @RequestBody UserRequest request) {
         logger.info("Adding user {}", request.getUsername());
 
@@ -51,7 +53,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         try {
             logger.info("Deleting user with ID {}", id);
@@ -62,7 +64,9 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}",
+                consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+                produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable int id,
             @Valid @RequestBody UserRequest request) {
@@ -75,7 +79,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponse> getUserById(@PathVariable int id) {
         try {
             logger.info("Fetching user with ID {}", id);
@@ -85,7 +89,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(params = "email")
+    @GetMapping(value = "/email", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponse> getUserByEmail(@RequestParam String email) {
         try {
             logger.info("Fetching user with email {}", email);
@@ -95,7 +99,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(params = "username")
+    @GetMapping(value = "/username", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponse> getUserByUsername(@RequestParam String username) {
         try {
             logger.info("Fetching user with username {}", username);
@@ -105,18 +109,19 @@ public class UserController {
         }
     }
 
-    @GetMapping("/search")
+    @GetMapping(value = "/search", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String username) {
         logger.info("Searching for users with username containing '{}'", username);
         return ResponseEntity.ok(userService.findTop10ByOrderByUsernameAsc(username));
     }
 
-    @GetMapping("/count")
+    @GetMapping(value = "/count", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Integer> countUsers() {
         return ResponseEntity.ok(userService.countUsers());
     }
 
-    @PatchMapping("/{id}/email")
+    @PatchMapping(value = "/id/email", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+                  produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponse> updateEmailById(
             @PathVariable int id,
             @Valid @RequestBody UpdateUserRequest request) {

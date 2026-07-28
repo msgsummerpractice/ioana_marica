@@ -9,7 +9,6 @@ import com.example.spring_project.model.User;
 @Component
 public class UserMapper {
 
-
     public UserResponse toResponse(User user) {
 
         return new UserResponse(
@@ -17,10 +16,8 @@ public class UserMapper {
                 user.getUsername(),
                 user.getEmail(),
                 user.getFirstName(),
-                user.getLastName()
-        );
+                user.getLastName());
     }
-
 
     public User toEntity(UserRequest request) {
 

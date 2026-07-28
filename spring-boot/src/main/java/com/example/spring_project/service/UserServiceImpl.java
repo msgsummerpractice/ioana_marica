@@ -4,10 +4,8 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import com.example.spring_project.dto.request.UpdateUserRequest;
 import com.example.spring_project.dto.response.UserResponse;
 import com.example.spring_project.mapper.UserMapper;
-import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
 
