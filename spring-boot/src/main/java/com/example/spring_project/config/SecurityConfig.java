@@ -1,4 +1,5 @@
 package com.example.spring_project.config;
+
 import com.example.spring_project.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,39 +20,45 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
+                http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/**").permitAll()
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+                .requestMatchers("/login").permitAll()
+                .anyRequest().authenticated())
+                .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/welcome", true)
+                .permitAll())
+                .logout(logout -> logout
+                .logoutSuccessUrl("/login?logout")
+                .permitAll());
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
+        @Bean
+        public UserDetailsService userDetailsService() {
 
-        UserDetails john = User.builder()
-                .username("john")
-                .password(passwordEncoder().encode("john"))
-                .roles(Role.USER.name())
-                .build();
+                UserDetails john = User.builder()
+                                .username("john")
+                                .password(passwordEncoder().encode("john"))
+                                .roles(Role.USER.name())
+                                .build();
 
-        UserDetails sam = User.builder()
-                .username("sam")
-                .password(passwordEncoder().encode("sam"))
-                .roles(Role.ADMIN.name())
-                .build();
+                UserDetails sam = User.builder()
+                                .username("sam")
+                                .password(passwordEncoder().encode("sam"))
+                                .roles(Role.ADMIN.name())
+                                .build();
 
-        return new InMemoryUserDetailsManager(john, sam);
-    }
+                return new InMemoryUserDetailsManager(john, sam);
+        }
 }

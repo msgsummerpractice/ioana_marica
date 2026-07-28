@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -137,7 +138,7 @@ public class UserController {
     @PatchMapping(value = "/id/email", consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE })
-                    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> updateEmailById(
             @PathVariable int id,
             @Valid @RequestBody UpdateUserRequest request) {
@@ -152,6 +153,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @Value("${api.version}")
     private String apiVersion;
