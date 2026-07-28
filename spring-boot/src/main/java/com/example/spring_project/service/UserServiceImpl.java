@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import com.example.spring_project.dto.response.UserResponse;
+import com.example.spring_project.exception_handling.DuplicateEmailException;
 import com.example.spring_project.mapper.UserMapper;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
@@ -39,12 +40,17 @@ public class UserServiceImpl implements UserService<User> {
     @Override
     public UserResponse saveEntity(User user) {
 
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateEmailException("Email already exists");
+        }
+
         User user_updated = new User();
 
         user_updated.setId(user.getId());
         user_updated.setUsername(user.getUsername());
         user_updated.setPassword(user.getPassword());
         user_updated.setEmail(user.getEmail());
+
         user_updated.setFirstName(user.getFirstName());
         user_updated.setLastName(user.getLastName());
 

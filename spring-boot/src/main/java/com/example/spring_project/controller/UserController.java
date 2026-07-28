@@ -45,7 +45,6 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
 
-
         return ResponseEntity.ok(userService.getAll(page, size, sortBy));
     }
 

@@ -10,6 +10,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User getByUsername(String username);
 
+    boolean existsByEmail(String email);
+
     List<User> findByUsernameContainingIgnoreCase(String search);
 
     @Query(value = "SELECT COUNT(*) FROM User", nativeQuery = true)
