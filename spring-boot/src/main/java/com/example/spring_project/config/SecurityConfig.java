@@ -1,23 +1,25 @@
 package com.example.spring_project.config;
 
-import com.example.spring_project.model.Role;
+import org.springframework.security.config.Customizer;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+        private UserDetailsService userDetailsService;
 
         @Bean
         public PasswordEncoder passwordEncoder() {
@@ -29,35 +31,17 @@ public class SecurityConfig {
 
                 http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login").permitAll()
-                .anyRequest().authenticated())
-                .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/welcome", true)
-                .permitAll())
-                .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout")
-                .permitAll());
-
+                .authorizeHttpRequests(authorize -> 
+                        {authorize .requestMatchers("/api/v1/**")
+                        .permitAll().anyRequest()
+                        .authenticated();})
+                .httpBasic(Customizer.withDefaults());
                 return http.build();
         }
 
         @Bean
-        public UserDetailsService userDetailsService() {
-
-                UserDetails john = User.builder()
-                                .username("john")
-                                .password(passwordEncoder().encode("john"))
-                                .roles(Role.USER.name())
-                                .build();
-
-                UserDetails sam = User.builder()
-                                .username("sam")
-                                .password(passwordEncoder().encode("sam"))
-                                .roles(Role.ADMIN.name())
-                                .build();
-
-                return new InMemoryUserDetailsManager(john, sam);
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+                return configuration.getAuthenticationManager();
         }
+
 }
