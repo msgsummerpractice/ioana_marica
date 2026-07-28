@@ -10,7 +10,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User getByUsername(String username);
 
-    List<User> findTop10ByOrderByUsernameAsc();
+    List<User> findByUsernameContainingIgnoreCase(String search);
 
     @Query(value = "SELECT COUNT(*) FROM User", nativeQuery = true)
     int countUsers();

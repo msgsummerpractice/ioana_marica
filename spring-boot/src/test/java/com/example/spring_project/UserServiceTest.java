@@ -1,149 +1,157 @@
 package com.example.spring_project;
 
-import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.dto.response.UserResponse;
 import com.example.spring_project.mapper.UserMapper;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
 import com.example.spring_project.service.UserServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
-    private UserMapper userMapper;
-    private UserServiceImpl userService;
+        @Mock
+        private UserRepository userRepository;
 
-    @BeforeEach
-    void setUp() {
-         userMapper = new UserMapper();
-        userService = new UserServiceImpl(userRepository, userMapper);
-        
-    }
+        private UserMapper userMapper;
+        private UserServiceImpl userService;
 
-    @Test
-    void testGetAllUsers() {
-        userService.getAll();
-        Mockito.verify(userRepository).findAll();
-    }
+        @BeforeEach
+        void setUp() {
+                userMapper = new UserMapper();
+                userService = new UserServiceImpl(userRepository, userMapper);
+        }
 
-    @Test
-    void testSaveUser() {
+        @Test
+        void testGetAllUsers() {
 
-        UserRequest request = new UserRequest(
-                1,
-                "John123",
-                "password123",
-                "john@example.com",
-                "John",
-                "Doe");
+                userService.getAll();
 
-        User savedUser = new User(
-                1,
-                "John123",
-                "password123",
-                "john@example.com",
-                "John",
-                "Doe");
+                Mockito.verify(userRepository).findAll();
+        }
 
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
-                .thenReturn(savedUser);
+        @Test
+        void testSaveUser() {
 
-        UserResponse response = userService.saveEntity(request);
-        assertEquals("John123", response.getUsername());
-        assertEquals("john@example.com", response.getEmail());
-        Mockito.verify(userRepository).save(Mockito.any(User.class));
-    }
+                User user = new User(
+                                1,
+                                "John123",
+                                "password123",
+                                "john@example.com",
+                                "John",
+                                "Doe");
 
-    @Test
-    void testUpdateUser() {
+                Mockito.when(userRepository.save(Mockito.any(User.class)))
+                                .thenReturn(user);
 
-        User user = new User(
-                1,
-                "John123",
-                "password123",
-                "john@example.com",
-                "John",
-                "Doe");
+                UserResponse response = userService.saveEntity(user);
 
-        UserRequest request = new UserRequest(
-                1,
-                "John123",
-                "password123",
-                "john@example.com",
-                "John",
-                "Doe");
+                assertEquals("John123", response.getUsername());
+                assertEquals("john@example.com", response.getEmail());
 
-        Mockito.when(userRepository.findById(1))
-                .thenReturn(Optional.of(user));
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
-                .thenReturn(user);
-        UserResponse response = userService.updateEntity(request);
-        assertEquals("John123", response.getUsername());
-        Mockito.verify(userRepository).save(Mockito.any(User.class));
-    }
+                Mockito.verify(userRepository).save(Mockito.any(User.class));
+        }
 
-    @Test
-    void testDeleteUser() {
-        UserRequest request = new UserRequest();
-        request.setId(1);
+        @Test
+        void testUpdateUser() {
 
-        Mockito.when(userRepository.existsById(1)).thenReturn(true);
-    }
+                User user = new User(
+                                1,
+                                "John123",
+                                "password123",
+                                "john@example.com",
+                                "John",
+                                "Doe");
 
-    @Test
-    void testGetUserById() {
+                Mockito.when(userRepository.findById(1))
+                                .thenReturn(Optional.of(user));
 
-        User user = new User(
-                1,
-                "John123",
-                "password123",
-                "john@example.com",
-                "John",
-                "Doe");
-        
-        Mockito.when(userRepository.findById(1))
-                .thenReturn(Optional.of(user)); 
-    }
+                Mockito.when(userRepository.save(Mockito.any(User.class)))
+                                .thenReturn(user);
 
+                UserResponse response = userService.updateEntity(1, user);
 
-    @Test
-    void testFindTop10ByOrderByUsernameAsc() {
+                assertEquals("John123", response.getUsername());
 
-        List<User> users = Arrays.asList(
-                new User(1, "Alice", "pass1", "alice@example.com", "Alice", "Smith"),
-                new User(2, "Bob", "pass2", "bob@example.com", "Bob", "Johnson"));
+                Mockito.verify(userRepository).findById(1);
+                Mockito.verify(userRepository).save(Mockito.any(User.class));
+        }
 
-        Mockito.when(userRepository.findTop10ByOrderByUsernameAsc())
-                .thenReturn(users);
+        @Test
+        void testDeleteUser() {
 
-        List<UserResponse> result = userService.findTop10ByOrderByUsernameAsc();
+                Mockito.when(userRepository.existsById(1)).thenReturn(true);
 
-        assertEquals(2, result.size());
-        assertEquals("Alice", result.get(0).getUsername());
-        assertEquals("Bob", result.get(1).getUsername());
-    }
+                userService.deleteEntityByID(1);
 
-    @Test
-    void testCountUsers() {
+                Mockito.verify(userRepository).deleteById(1);
+        }
 
-        Mockito.when(userRepository.countUsers()).thenReturn(5);
+        @Test
+        void testGetUserById() {
 
-        int result = userService.countUsers();
+                User user = new User(
+                                1,
+                                "John123",
+                                "password123",
+                                "john@example.com",
+                                "John",
+                                "Doe");
 
-        assertEquals(5, result);
-    }
+                Mockito.when(userRepository.findById(1))
+                                .thenReturn(Optional.of(user));
+
+                UserResponse response = userService.getById(1);
+
+                assertNotNull(response);
+                assertEquals("John123", response.getUsername());
+
+                Mockito.verify(userRepository).findById(1);
+        }
+
+        @Test
+        void testFindTop10ByOrderByUsernameAsc() {
+
+                List<User> mockUsers = Arrays.asList(
+                                new User(1, "Alice", "password1", "alice@example.com", "Alice", "Smith"),
+                                new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson"));
+
+                Mockito.when(userRepository.findByUsernameContainingIgnoreCase("Alice"))
+                                .thenReturn(mockUsers);
+
+                List<UserResponse> result = userService.findTop10ByOrderByUsernameAsc("Alice");
+
+                assertEquals(2, result.size());
+                assertEquals("Alice", result.get(0).getUsername());
+                assertEquals("Bob", result.get(1).getUsername());
+
+                Mockito.verify(userRepository)
+                                .findByUsernameContainingIgnoreCase("Alice");
+        }
+
+        @Test
+        void testCountUsers() {
+
+                Mockito.when(userRepository.countUsers()).thenReturn(5);
+
+                int result = userService.countUsers();
+
+                assertEquals(5, result);
+
+                Mockito.verify(userRepository).countUsers();
+        }
 }

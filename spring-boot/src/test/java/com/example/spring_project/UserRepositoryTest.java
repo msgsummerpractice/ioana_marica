@@ -82,10 +82,9 @@ class UserRepositoryTest {
     void testFindTop10ByOrderByUsernameAsc() {
         List<User> mockUsers = Arrays.asList(
                 new User(1, "Alice", "password1", "alice@example.com", "Alice", "Smith"),
-                new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson")
-        );
-        Mockito.when(mockRepository.findTop10ByOrderByUsernameAsc()).thenReturn(mockUsers);
-        List<User> result = mockRepository.findTop10ByOrderByUsernameAsc();
+                new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson"));
+        Mockito.when(mockRepository.findByUsernameContainingIgnoreCase("Alice")).thenReturn(mockUsers);
+        List<User> result = mockRepository.findByUsernameContainingIgnoreCase("Alice");
         assertEquals(mockUsers, result);
     }
 
