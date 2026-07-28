@@ -1,26 +1,24 @@
 package com.example.spring_project.controller;
 
+import com.example.spring_project.dto.request.UpdateUserRequest;
+import com.example.spring_project.dto.request.UserRequest;
+import org.springframework.http.MediaType;
+import com.example.spring_project.dto.response.UserResponse;
+import com.example.spring_project.mapper.UserMapper;
+import com.example.spring_project.model.User;
+import com.example.spring_project.service.UserServiceImpl;
+
+import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.spring_project.model.User;
-import com.example.spring_project.service.UserServiceImpl;
-
-import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,69 +27,119 @@ import java.util.NoSuchElementException;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private final UserServiceImpl userService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserServiceImpl userService) {
-        logger.info("UserController initialized");
+    public UserController(UserServiceImpl userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
-    // show all users
-    @GetMapping
-    public List<User> getAllUsers() {
-        logger.info("Fetching all users");
-        return userService.getAll();
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<Page<UserResponse>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+
+        return ResponseEntity.ok(userService.getAll(page, size, sortBy));
     }
 
-    // add user
-    @PostMapping
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        logger.info("Adding a new user: {} {} {}", user.getId(), user.getName(), user.getAge());
-        return ResponseEntity.ok(userService.saveEntity(user));
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<UserResponse> addUser(@Valid @RequestBody UserRequest request) {
+        logger.info("Adding user {}", request.getUsername());
+
+        User user = userMapper.toEntity(request);
+
+        UserResponse response = userService.saveEntity(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // delete user
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         try {
-            userService.deleteEntity(userService.getById(id));
-            logger.info("Deleted user with id: {}", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            logger.info("Deleting user with ID {}", id);
+            userService.deleteEntityByID(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    // update user
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@Valid
+    @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<UserResponse> updateUser(
             @PathVariable int id,
-            @RequestBody User user) {
+            @Valid @RequestBody UserRequest request) {
 
-        user.setId(id);
-        User updatedUser = userService.updateEntity(user);
-        logger.info("Updated user with id: {} to {} {}", id, updatedUser.getName(), updatedUser.getAge());
+        logger.info("Updating user with ID {}", id);
+
+        User user = userMapper.toEntity(request);
+
+        UserResponse updatedUser = userService.updateEntity(id, user);
         return ResponseEntity.ok(updatedUser);
     }
 
-    // get user by id
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
+    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<UserResponse> getUserById(@PathVariable int id) {
         try {
-            User user = userService.getById(id);
-            logger.info("Fetched user with id: {} {} {}", user.getId(), user.getName(), user.getAge());
-            return ResponseEntity.ok(user);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            logger.info("Fetching user with ID {}", id);
+            return ResponseEntity.ok(userService.getById(id));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    // get users by name
-    @GetMapping(params = "name")
-    public List<User> getUsersByName(@RequestParam String name) {
-        logger.info("Fetching users with name: {}", name);
-        return userService.getByName(name);
+    @GetMapping(value = "/email", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<UserResponse> getUserByEmail(@RequestParam String email) {
+        try {
+            logger.info("Fetching user with email {}", email);
+            return ResponseEntity.ok(userService.getByEmail(email));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/username", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<UserResponse> getUserByUsername(@RequestParam String username) {
+        try {
+            logger.info("Fetching user with username {}", username);
+            return ResponseEntity.ok(userService.getByUsername(username));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/search", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String username) {
+        logger.info("Searching for users with username containing '{}'", username);
+        return ResponseEntity.ok(userService.findTop10ByOrderByUsernameAsc(username));
+    }
+
+    @GetMapping(value = "/count", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<Integer> countUsers() {
+        return ResponseEntity.ok(userService.countUsers());
+    }
+
+    @PatchMapping(value = "/id/email", consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<UserResponse> updateEmailById(
+            @PathVariable int id,
+            @Valid @RequestBody UpdateUserRequest request) {
+
+        try {
+            logger.info("Updating email for user with ID {}", id);
+            User user = new User();
+            user.setEmail(request.getEmail());
+            UserResponse updatedUser = userService.updateEmailById(id, user);
+            return ResponseEntity.ok(updatedUser);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Value("${api.version}")
