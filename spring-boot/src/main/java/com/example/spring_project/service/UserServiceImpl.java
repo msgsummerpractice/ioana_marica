@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService<User> {
                 .limit(10)
                 .map(userMapper::toResponse)
                 .collect(Collectors.toList());
-                
+
     }
 
     @Override
