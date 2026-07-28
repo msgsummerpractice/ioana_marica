@@ -120,11 +120,8 @@ public class UserServiceImpl implements UserService<User> {
     public List<UserResponse> findTop10ByOrderByUsernameAsc(String username) {
         return userRepository.findByUsernameContainingIgnoreCase(username)
                 .stream()
-                .sorted(Comparator.comparing(User::getUsername, String.CASE_INSENSITIVE_ORDER))
-                .limit(10)
                 .map(userMapper::toResponse)
                 .collect(Collectors.toList());
-
     }
 
     @Override

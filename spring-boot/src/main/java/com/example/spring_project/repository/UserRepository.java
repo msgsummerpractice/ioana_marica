@@ -12,6 +12,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByEmail(String email);
 
+    @Query(value = "SELECT * FROM User WHERE username ILIKE '%' || :search || '%' ORDER BY username ASC LIMIT 10", nativeQuery = true)
     List<User> findByUsernameContainingIgnoreCase(String search);
 
     @Query(value = "SELECT COUNT(*) FROM User", nativeQuery = true)
