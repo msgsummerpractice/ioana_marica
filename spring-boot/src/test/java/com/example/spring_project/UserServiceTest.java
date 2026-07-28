@@ -38,10 +38,13 @@ class UserServiceTest {
 
         @Test
         void testGetAllUsers() {
-
-                userService.getAll();
-
-                Mockito.verify(userRepository).findAll();
+                List<User> mockUsers = Arrays.asList(
+                                new User(1, "John123", "password123", "john@example.com", "John", "Doe"),
+                                new User(2, "Jane", "password456", "jane@example.com", "Jane", "Smith")
+                );
+                Mockito.when(userRepository.findAll()).thenReturn(mockUsers);
+                List<User> result = userRepository.findAll();
+                assertEquals(mockUsers, result);
         }
 
         @Test

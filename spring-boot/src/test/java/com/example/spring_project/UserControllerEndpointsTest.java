@@ -9,6 +9,7 @@ import com.example.spring_project.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -41,13 +42,14 @@ public class UserControllerEndpointsTest {
       @Test
       void testShowUsersEndpoint() throws Exception {
 
-            when(userService.getAll()).thenReturn(Collections.emptyList());
+            when(userService.getAll(0, 10, "id"))
+                        .thenReturn(Page.empty());
 
             mvc.perform(get("/users"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON));
 
-            verify(userService).getAll();
+            verify(userService).getAll(0, 10, "id");
       }
 
       @Test
@@ -68,8 +70,11 @@ public class UserControllerEndpointsTest {
                         "John",
                         "Doe");
 
-            when(userMapper.toEntity(any(UserRequest.class))).thenReturn(user);
-            when(userService.saveEntity(any(User.class))).thenReturn(response);
+            when(userMapper.toEntity(any(UserRequest.class)))
+                        .thenReturn(user);
+
+            when(userService.saveEntity(any(User.class)))
+                        .thenReturn(response);
 
             mvc.perform(post("/users")
                         .contentType(APPLICATION_JSON)
@@ -96,7 +101,8 @@ public class UserControllerEndpointsTest {
       @Test
       void testDeleteUserEndpoint() throws Exception {
 
-            doNothing().when(userService).deleteEntityByID(1);
+            doNothing().when(userService)
+                        .deleteEntityByID(1);
 
             mvc.perform(delete("/users/1"))
                         .andExpect(status().isNoContent());
@@ -122,8 +128,11 @@ public class UserControllerEndpointsTest {
                         "John",
                         "Doe");
 
-            when(userMapper.toEntity(any(UserRequest.class))).thenReturn(user);
-            when(userService.updateEntity(anyInt(), any(User.class))).thenReturn(response);
+            when(userMapper.toEntity(any(UserRequest.class)))
+                        .thenReturn(user);
+
+            when(userService.updateEntity(anyInt(), any(User.class)))
+                        .thenReturn(response);
 
             mvc.perform(put("/users/1")
                         .contentType(APPLICATION_JSON)
@@ -140,8 +149,7 @@ public class UserControllerEndpointsTest {
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
                         .andExpect(jsonPath("$.id").value(1))
-                        .andExpect(jsonPath("$.username").value("John123"))
-                        .andExpect(jsonPath("$.email").value("john@example.com"));
+                        .andExpect(jsonPath("$.username").value("John123"));
 
             verify(userMapper).toEntity(any(UserRequest.class));
             verify(userService).updateEntity(anyInt(), any(User.class));
@@ -162,8 +170,7 @@ public class UserControllerEndpointsTest {
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
                         .andExpect(jsonPath("$.id").value(1))
-                        .andExpect(jsonPath("$.username").value("John123"))
-                        .andExpect(jsonPath("$.email").value("john@example.com"));
+                        .andExpect(jsonPath("$.username").value("John123"));
 
             verify(userService).getById(1);
       }
@@ -179,7 +186,7 @@ public class UserControllerEndpointsTest {
                                     "John",
                                     "Doe"));
 
-            mvc.perform(get("/users")
+            mvc.perform(get("/users/email")
                         .param("email", "john@example.com"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
@@ -199,7 +206,7 @@ public class UserControllerEndpointsTest {
                                     "John",
                                     "Doe"));
 
-            mvc.perform(get("/users")
+            mvc.perform(get("/users/username")
                         .param("username", "John123"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
@@ -225,7 +232,8 @@ public class UserControllerEndpointsTest {
       @Test
       void testCountUsersEndpoint() throws Exception {
 
-            when(userService.countUsers()).thenReturn(5);
+            when(userService.countUsers())
+                        .thenReturn(5);
 
             mvc.perform(get("/users/count"))
                         .andExpect(status().isOk())

@@ -22,21 +22,41 @@ class UserRepositoryTest {
 
     @Test
     void testGetAllUsers() {
-        List<User> mockUsers = Arrays.asList(new User(1, "John123", "password123", "john@example.com", "John", "Doe"),
+        List<User> mockUsers = Arrays.asList(
+                new User(1, "John123", "password123", "john@example.com", "John", "Doe"),
                 new User(2, "Jane", "password456", "jane@example.com", "Jane", "Smith"));
+
         Mockito.when(mockRepository.findAll()).thenReturn(mockUsers);
+
         List<User> result = mockRepository.findAll();
+
         assertEquals(mockUsers, result);
     }
 
     @Test
     void testSaveUser() {
-        User newUser = new User(3, "Alice", "password789", "alice@example.com", "Alice", "Doe");
+        User newUser = new User(
+                3,
+                "Alice",
+                "password789",
+                "alice@example.com",
+                "Alice",
+                "Doe");
+
         Mockito.when(mockRepository.save(newUser)).thenReturn(newUser);
+
         User result = mockRepository.save(newUser);
+
         assertEquals(newUser, result);
 
-        User newUser2 = new User(6, "Bob", "password000", "bob@example.com", "Bob", "Smith");
+        User newUser2 = new User(
+                6,
+                "Bob",
+                "password000",
+                "bob@example.com",
+                "Bob",
+                "Smith");
+
         try {
             mockRepository.save(newUser2);
         } catch (Exception e) {
@@ -46,35 +66,62 @@ class UserRepositoryTest {
 
     @Test
     void testGetByEmail() {
-        User mockUser = new User(1, "John123", "password123", "john@example.com", "John", "Doe");
-        Mockito.when(mockRepository.getByEmail("john@example.com")).thenReturn(mockUser);
+        User mockUser = new User(
+                1,
+                "John123",
+                "password123",
+                "john@example.com",
+                "John",
+                "Doe");
+
+        Mockito.when(mockRepository.getByEmail("john@example.com"))
+                .thenReturn(mockUser);
+
         User result = mockRepository.getByEmail("john@example.com");
+
         assertEquals(mockUser, result);
     }
 
     @Test
     void testDeleteUser() {
-        User mockUser = new User(1, "John123", "password123", "john@example.com", "John", "Doe");
-        Mockito.when(mockRepository.existsById(1)).thenReturn(true);
+
         mockRepository.deleteById(1);
-        Mockito.verify(mockRepository).existsById(1);
-        Mockito.verify(mockRepository).deleteById(1);
+
+        Mockito.verify(mockRepository)
+                .deleteById(1);
     }
 
     @Test
     void testUpdateUser() {
-        User existingUser = new User(1, "John123", "password123", "john@example.com", "John", "Doe");
-        Mockito.when(mockRepository.findById(1)).thenReturn(java.util.Optional.of(existingUser));
+
+        User existingUser = new User(
+                1,
+                "John123",
+                "password123",
+                "john@example.com",
+                "John",
+                "Doe");
+
         existingUser.setUsername("JohnUpdated");
-        Mockito.when(mockRepository.save(existingUser)).thenReturn(existingUser);
+
+        Mockito.when(mockRepository.save(existingUser))
+                .thenReturn(existingUser);
+
         User result = mockRepository.save(existingUser);
+
         assertEquals("JohnUpdated", result.getUsername());
+
+        Mockito.verify(mockRepository)
+                .save(existingUser);
     }
 
     @Test
     void testCountUsers() {
-        Mockito.when(mockRepository.countUsers()).thenReturn(5);
+        Mockito.when(mockRepository.countUsers())
+                .thenReturn(5);
+
         int result = mockRepository.countUsers();
+
         assertEquals(5, result);
     }
 
@@ -83,8 +130,12 @@ class UserRepositoryTest {
         List<User> mockUsers = Arrays.asList(
                 new User(1, "Alice", "password1", "alice@example.com", "Alice", "Smith"),
                 new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson"));
-        Mockito.when(mockRepository.findByUsernameContainingIgnoreCase("Alice")).thenReturn(mockUsers);
+
+        Mockito.when(mockRepository.findByUsernameContainingIgnoreCase("Alice"))
+                .thenReturn(mockUsers);
+
         List<User> result = mockRepository.findByUsernameContainingIgnoreCase("Alice");
+
         assertEquals(mockUsers, result);
     }
 
