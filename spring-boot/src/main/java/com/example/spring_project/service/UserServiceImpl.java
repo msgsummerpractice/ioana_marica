@@ -1,9 +1,11 @@
 package com.example.spring_project.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -22,6 +24,9 @@ public class UserServiceImpl implements UserService<User> {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
@@ -47,7 +52,7 @@ public class UserServiceImpl implements UserService<User> {
 
         user_updated.setId(user.getId());
         user_updated.setUsername(user.getUsername());
-        user_updated.setPassword(user.getPassword());
+        user_updated.setPassword(passwordEncoder.encode(user.getPassword()));
         user_updated.setEmail(user.getEmail());
 
         user_updated.setFirstName(user.getFirstName());
@@ -64,7 +69,7 @@ public class UserServiceImpl implements UserService<User> {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
         existingUser.setUsername(user.getUsername());
-        existingUser.setPassword(user.getPassword());
+        existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         existingUser.setEmail(user.getEmail());
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
