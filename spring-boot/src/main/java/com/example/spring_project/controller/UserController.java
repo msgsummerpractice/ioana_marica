@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class UserController {
     }
 
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<UserResponse>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -48,6 +50,7 @@ public class UserController {
 
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> addUser(@Valid @RequestBody UserRequest request) {
         logger.info("Adding user {}", request.getUsername());
 
@@ -58,6 +61,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         try {
             logger.info("Deleting user with ID {}", id);
@@ -71,6 +75,7 @@ public class UserController {
     @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable int id,
             @Valid @RequestBody UserRequest request) {
@@ -84,6 +89,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> getUserById(@PathVariable int id) {
         try {
             logger.info("Fetching user with ID {}", id);
@@ -94,6 +100,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/email", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> getUserByEmail(@RequestParam String email) {
         try {
             logger.info("Fetching user with email {}", email);
@@ -104,6 +111,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/username", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> getUserByUsername(@RequestParam String username) {
         try {
             logger.info("Fetching user with username {}", username);
@@ -114,12 +122,14 @@ public class UserController {
     }
 
     @GetMapping(value = "/search", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String username) {
         logger.info("Searching for users with username containing '{}'", username);
         return ResponseEntity.ok(userService.findTop10ByOrderByUsernameAsc(username));
     }
 
     @GetMapping(value = "/count", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Integer> countUsers() {
         return ResponseEntity.ok(userService.countUsers());
     }
@@ -127,6 +137,7 @@ public class UserController {
     @PatchMapping(value = "/id/email", consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE })
+                    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> updateEmailById(
             @PathVariable int id,
             @Valid @RequestBody UpdateUserRequest request) {
