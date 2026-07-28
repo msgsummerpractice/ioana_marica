@@ -133,7 +133,7 @@ class UserServiceTest {
                                 new User(1, "Alice", "password1", "alice@example.com", "Alice", "Smith"),
                                 new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson"));
 
-                Mockito.when(userRepository.findByUsernameContainingIgnoreCase("Alice"))
+                Mockito.when(userRepository.findTop10ByUsernameContainingIgnoreCaseOrderByUsernameAsc("Alice"))
                                 .thenReturn(mockUsers);
 
                 List<UserResponse> result = userService.findTop10ByOrderByUsernameAsc("Alice");
@@ -143,7 +143,7 @@ class UserServiceTest {
                 assertEquals("Bob", result.get(1).getUsername());
 
                 Mockito.verify(userRepository)
-                                .findByUsernameContainingIgnoreCase("Alice");
+                                .findTop10ByUsernameContainingIgnoreCaseOrderByUsernameAsc("Alice");
         }
 
         @Test

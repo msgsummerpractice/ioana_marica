@@ -14,7 +14,6 @@ import com.example.spring_project.mapper.UserMapper;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -118,7 +117,7 @@ public class UserServiceImpl implements UserService<User> {
 
     @Override
     public List<UserResponse> findTop10ByOrderByUsernameAsc(String username) {
-        return userRepository.findByUsernameContainingIgnoreCase(username)
+        return userRepository.findTop10ByUsernameContainingIgnoreCaseOrderByUsernameAsc(username)
                 .stream()
                 .map(userMapper::toResponse)
                 .collect(Collectors.toList());

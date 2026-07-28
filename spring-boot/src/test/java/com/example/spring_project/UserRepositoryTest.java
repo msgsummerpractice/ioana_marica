@@ -131,10 +131,10 @@ class UserRepositoryTest {
                 new User(1, "Alice", "password1", "alice@example.com", "Alice", "Smith"),
                 new User(2, "Bob", "password2", "bob@example.com", "Bob", "Johnson"));
 
-        Mockito.when(mockRepository.findByUsernameContainingIgnoreCase("Alice"))
+        Mockito.when(mockRepository.findTop10ByUsernameContainingIgnoreCaseOrderByUsernameAsc("Alice"))
                 .thenReturn(mockUsers);
 
-        List<User> result = mockRepository.findByUsernameContainingIgnoreCase("Alice");
+        List<User> result = mockRepository.findTop10ByUsernameContainingIgnoreCaseOrderByUsernameAsc("Alice");
 
         assertEquals(mockUsers, result);
     }
