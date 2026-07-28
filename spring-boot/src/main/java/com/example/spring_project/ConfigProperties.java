@@ -23,5 +23,5 @@ public class ConfigProperties {
 
     public void setHostName(String hostName) {
         this.hostName = hostName;
-}
+    }
 }

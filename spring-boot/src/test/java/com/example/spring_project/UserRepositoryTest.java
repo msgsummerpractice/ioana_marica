@@ -199,9 +199,9 @@ class UserRepositoryTest {
                 assertEquals(
                                 Role.USER,
                                 user.getRoles()
-                                .iterator()
-                                .next()
-                                .getName());
+                                                .iterator()
+                                                .next()
+                                                .getName());
 
         }
 

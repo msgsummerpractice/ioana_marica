@@ -1,6 +1,7 @@
 package com.example.spring_project.service;
 
 import com.example.spring_project.JwtTokenProvider;
+import com.example.spring_project.dto.request.MfaVerifyRequest;
 import com.example.spring_project.dto.request.SignInRequest;
 import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.dto.response.SignInResponse;
@@ -13,12 +14,19 @@ import com.example.spring_project.model.User;
 import com.example.spring_project.repository.RolesRepository;
 import com.example.spring_project.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.ott.GenerateOneTimeTokenRequest;
+import org.springframework.security.authentication.ott.OneTimeToken;
+import org.springframework.security.authentication.ott.OneTimeTokenAuthenticationToken;
+import org.springframework.security.authentication.ott.OneTimeTokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,25 +36,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RolesRepository rolesRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserMapper userMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final RolesRepository rolesRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final OneTimeTokenService oneTimeTokenService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
     public SignInResponse login(SignInRequest request) {
@@ -56,7 +57,29 @@ public class AuthServiceImpl implements AuthService {
                         request.getUsername(),
                         request.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        GenerateOneTimeTokenRequest ottRequest = new GenerateOneTimeTokenRequest(request.getUsername());
+        OneTimeToken ott = oneTimeTokenService.generate(ottRequest);
+
+        System.out.println("Mfa code: " + ott.getTokenValue());
+
+        return new SignInResponse(null, null, true,
+                "Introduce the MFA code sent.");
+    }
+
+    @Override
+    public SignInResponse verifyMfa(MfaVerifyRequest request) {
+
+        OneTimeToken consumedToken = oneTimeTokenService.consume(
+                new OneTimeTokenAuthenticationToken(request.getToken()));
+
+        if (!consumedToken.getUsername().equals(request.getUsername())) {
+            throw new BadCredentialsException("Mfa code invalid for user.");
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
 
         String token = jwtTokenProvider.generateToken(authentication);
 
@@ -64,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        return new SignInResponse(token, roles);
+        return new SignInResponse(token, roles, false, "Authentication successful.");
     }
 
     @Override

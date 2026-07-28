@@ -1,5 +1,6 @@
 package com.example.spring_project.controller;
 
+import com.example.spring_project.dto.request.MfaVerifyRequest;
 import com.example.spring_project.dto.request.SignInRequest;
 import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.dto.response.SignInResponse;
@@ -33,5 +34,11 @@ public class AuthController {
     public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest request) {
         UserResponse response = authService.register(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/mfa/verify")
+    public ResponseEntity<SignInResponse> verifyMfa(@Valid @RequestBody MfaVerifyRequest request) {
+        SignInResponse response = authService.verifyMfa(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

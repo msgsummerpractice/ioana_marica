@@ -10,6 +10,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignInResponse {
-    private String token;
-    private Set<String> roles;
+    private String token;       
+    private Set<String> roles;  
+    private boolean mfaRequired;
+    private String message;
 }
