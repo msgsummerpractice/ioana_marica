@@ -1,5 +1,5 @@
 package com.example.spring_project.config;
-
+import com.example.spring_project.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -43,13 +43,13 @@ public class SecurityConfig {
         UserDetails john = User.builder()
                 .username("john")
                 .password(passwordEncoder().encode("john"))
-                .roles("USER")
+                .roles(Role.USER.name())
                 .build();
 
         UserDetails sam = User.builder()
                 .username("sam")
                 .password(passwordEncoder().encode("sam"))
-                .roles("ADMIN")
+                .roles(Role.ADMIN.name())
                 .build();
 
         return new InMemoryUserDetailsManager(john, sam);
