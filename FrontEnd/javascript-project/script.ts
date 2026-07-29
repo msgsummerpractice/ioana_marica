@@ -1,22 +1,30 @@
-"use strict";
 document.addEventListener("DOMContentLoaded", () => {
-    const fetchBtn = document.querySelector("#fetchBtn");
-    const img = document.querySelector("#displayImage");
-    const errorDiv = document.querySelector("#error");
+    const fetchBtn = document.querySelector<HTMLButtonElement>("#fetchBtn")
+    const img = document.querySelector<HTMLImageElement>("#displayImage")
+    const errorDiv = document.querySelector<HTMLDivElement>("#error");
+
     if (!fetchBtn || !img || !errorDiv) {
         return;
     }
-    const url = "https://dog.ceo/api/breeds/image/random";
+
+    type DogApiResponse = {
+        message: string;
+    };
+
+    const url : string = "https://dog.ceo/api/breeds/image/random";
     fetchBtn.addEventListener("click", async () => {
-        await fetchDogImage(url);
-    });
-    const fetchDogImage = async (url) => {
+        await fetchDogImage(url)
+
+
+});
+    const fetchDogImage = async (url: string) => {
         try {
             const response = await fetch(url);
-            if (!response.ok) {
+            if (!response.ok){
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const data = await response.json();
+            const data: DogApiResponse = await response.json();
+
             img.src = data.message;
         }
         catch (error) {
@@ -25,4 +33,5 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     };
+
 });

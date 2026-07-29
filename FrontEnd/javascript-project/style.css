@@ -10,7 +10,6 @@ button {
 img {
     max-width: 400px;
     margin-top: 15px;
-    display: none;
     border: 1px solid #ccc;
 }
 #error {
