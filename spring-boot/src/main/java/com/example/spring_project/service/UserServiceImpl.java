@@ -48,17 +48,17 @@ public class UserServiceImpl implements UserService<User> {
             throw new DuplicateEmailException("Email already exists");
         }
 
-        User user_updated = new User();
+        User updatedUser = new User();
 
-        user_updated.setId(user.getId());
-        user_updated.setUsername(user.getUsername());
-        user_updated.setPassword(passwordEncoder.encode(user.getPassword()));
-        user_updated.setEmail(user.getEmail());
+        updatedUser.setId(user.getId());
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        updatedUser.setEmail(user.getEmail());
 
-        user_updated.setFirstName(user.getFirstName());
-        user_updated.setLastName(user.getLastName());
+        updatedUser.setFirstName(user.getFirstName());
+        updatedUser.setLastName(user.getLastName());
 
-        User savedUser = userRepository.save(user_updated);
+        User savedUser = userRepository.save(updatedUser);
 
         return userMapper.toResponse(savedUser);
     }

@@ -5,6 +5,7 @@ import com.example.spring_project.dto.request.SignInRequest;
 import com.example.spring_project.dto.request.UserRequest;
 import com.example.spring_project.dto.response.SignInResponse;
 import com.example.spring_project.dto.response.UserResponse;
+import com.example.spring_project.model.User;
 import com.example.spring_project.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -27,18 +28,18 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest request) {
         SignInResponse response = authService.login(request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<SignInResponse>(response, HttpStatus.OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest request) {
         UserResponse response = authService.register(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<UserResponse>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/mfa/verify")
     public ResponseEntity<SignInResponse> verifyMfa(@Valid @RequestBody MfaVerifyRequest request) {
         SignInResponse response = authService.verifyMfa(request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<SignInResponse>(response, HttpStatus.OK);
     }
 }
