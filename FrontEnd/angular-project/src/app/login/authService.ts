@@ -13,4 +13,8 @@ export class Authentification {
   logout() {
     this.isAuthentificated.set(false);
   }
+
+  getAuthToken() {
+    return 'your-auth-token';
+  }
 }
