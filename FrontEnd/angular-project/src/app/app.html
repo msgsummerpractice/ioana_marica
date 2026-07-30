@@ -1,15 +1,21 @@
 <mat-toolbar-row>
   <div class="flex justify-end items-center">
     <button matButton="filled">
-      <a href="#" class="text-black font-semibold hover:text-gray-300"><mat-icon>info</mat-icon></a>
+      <a href="#" class="text-black font-semibold hover:text-gray-300">
+        <mat-icon>info</mat-icon>
+      </a>
     </button>
+
     <button matButton="filled">
-      <a href="#" class="text-black font-semibold hover:text-gray-300"
-        ><mat-icon>settings</mat-icon></a
-      >
+      <a href="#" class="text-black font-semibold hover:text-gray-300">
+        <mat-icon>settings</mat-icon>
+      </a>
     </button>
-    <button matButton="filled">
-      <a href="#" class="text-black font-semibold hover:text-gray-300"><mat-icon>home</mat-icon></a>
+
+    <button matButton="filled" s>
+      <a href="#" class="text-black font-semibold hover:text-gray-300">
+        <mat-icon>home</mat-icon>
+      </a>
     </button>
   </div>
 </mat-toolbar-row>
@@ -21,44 +27,20 @@
     Here are some cute dogs. Admire them.
   </p>
 </header>
-<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-  <div class="bg-purple-400 rounded-lg shadow overflow-hidden">
-    <img
-      src="https://images.dog.ceo/breeds/elkhound-norwegian/n02091467_4421.jpg"
-      width="2000"
-      ,
-      height="3000"
-    />
-    <p class="mt-2 text-lg text-black flex justify-center items-center">
-      Here is the first cute dog.
-    </p>
-    <p class="mt-2 text-lg text-black flex justify-center items-center">
-      Breed: elkhound-norwegian
-    </p>
+
+<div *ngIf="dogs$ | async as dogs" class="grid grid-cols-3">
+  <div class="bg-gray-200 rounded-xl text-center">
+    <img [src]="dogs[0]?.message" alt="First dog" class="w-200 h-100 object-cover rounded-lg" />
+    <h3 class="text-xl font-semibold mb-2">Here is the first cute dog.</h3>
   </div>
 
-  <div class="bg-purple-400 rounded-lg shadow overflow-hidden">
-    <img
-      src="https://images.dog.ceo/breeds/pinscher/coffee_soul_bari028.jpg"
-      width="2000"
-      ,height="3000"
-    />
-    <p class="mt-2 text-lg text-black flex justify-center items-center">
-      Here is the second cute dog.
-    </p>
-    <p class="mt-2 text-lg text-black flex justify-center items-center">Breed: pinscher</p>
+  <div class="bg-gray-200 rounded-xl text-center">
+    <img [src]="dogs[1]?.message" alt="Second dog" class="w-200 h-100 object-cover rounded-lg" />
+    <h3 class="text-xl font-semibold mb-2">Here is the second cute dog.</h3>
   </div>
 
-  <div class="bg-purple-400 rounded-lg shadow overflow-hidden">
-    <img
-      src="https://images.dog.ceo/breeds/husky/n02110185_1469.jpg"
-      width="2000"
-      ,
-      height="3000"
-    />
-    <p class="mt-2 text-lg text-black flex justify-center items-center">
-      Here is the third cute dog.
-    </p>
-    <p class="mt-2 text-lg text-black flex justify-center items-center">Breed: husky</p>
+  <div class="bg-gray-200 rounded-xl text-center">
+    <img [src]="dogs[2]?.message" alt="Third dog" class="w-200 h-100 object-cover rounded-lg" />
+    <h3 class="text-xl font-semibold mb-2">Here is the third cute dog.</h3>
   </div>
 </div>
