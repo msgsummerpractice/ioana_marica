@@ -17,6 +17,12 @@
         <mat-icon>home</mat-icon>
       </a>
     </button>
+
+    <button matButton="filled" (click)="login()">
+      <mat-icon>login</mat-icon>
+      Login
+    </button>
+    <button matButton="filled" (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
   </div>
 </mat-toolbar-row>
 
@@ -42,5 +48,9 @@
   <div class="bg-gray-200 rounded-xl text-center">
     <img [src]="dogs()[2]" alt="Third dog" class="w-200 h-100 object-cover rounded-lg" />
     <h3 class="text-xl font-semibold mb-2">Here is the third cute dog.</h3>
+  </div>
+
+  <div *appAuth class="text-l font-semibold mb-2">
+    <p>You are authenticated.</p>
   </div>
 </div>
