@@ -1,4 +1,4 @@
-import { Auth } from './auth';
+import { Auth } from './authDirective';
 
 describe('Auth', () => {
   it('should create an instance', () => {
