@@ -1,40 +1,21 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatButton } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { forkJoin, Observable } from 'rxjs';
-
-interface Dog {
-  message: string;
-  status: string;
-}
+import { Service, Dog } from './service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatButton, MatToolbarModule, MatIconModule],
+  imports: [CommonModule, RouterOutlet, MatButtonModule, MatToolbarModule, MatIconModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App implements OnInit {
-  protected readonly title = signal('my-app');
+export class App {
+  private dogService = inject(Service);
 
-  dogs$!: Observable<Dog[]>;
-
-  constructor(private http: HttpClient) {}
-
-  fetchDog() {
-    this.dogs$ = forkJoin([
-      this.http.get<Dog>('https://dog.ceo/api/breeds/image/random'),
-      this.http.get<Dog>('https://dog.ceo/api/breeds/image/random'),
-      this.http.get<Dog>('https://dog.ceo/api/breeds/image/random'),
-    ]);
-  }
-
-  ngOnInit(): void {
-    this.fetchDog();
-  }
+  dogs$: Observable<Dog[]> = this.dogService.fetchDogs();
 }
