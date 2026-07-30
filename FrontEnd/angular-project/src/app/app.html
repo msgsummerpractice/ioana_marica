@@ -28,19 +28,19 @@
   </p>
 </header>
 
-<div *ngIf="dogs$ | async as dogs" class="grid grid-cols-3">
+<div *ngIf="dogs().length" class="grid grid-cols-3">
   <div class="bg-gray-200 rounded-xl text-center">
-    <img [src]="dogs[0]?.message" alt="First dog" class="w-200 h-100 object-cover rounded-lg" />
+    <img [src]="dogs()[0]?.message" alt="First dog" class="w-200 h-100 object-cover rounded-lg" />
     <h3 class="text-xl font-semibold mb-2">Here is the first cute dog.</h3>
   </div>
 
   <div class="bg-gray-200 rounded-xl text-center">
-    <img [src]="dogs[1]?.message" alt="Second dog" class="w-200 h-100 object-cover rounded-lg" />
+    <img [src]="dogs()[1]?.message" alt="Second dog" class="w-200 h-100 object-cover rounded-lg" />
     <h3 class="text-xl font-semibold mb-2">Here is the second cute dog.</h3>
   </div>
 
   <div class="bg-gray-200 rounded-xl text-center">
-    <img [src]="dogs[2]?.message" alt="Third dog" class="w-200 h-100 object-cover rounded-lg" />
+    <img [src]="dogs()[2]?.message" alt="Third dog" class="w-200 h-100 object-cover rounded-lg" />
     <h3 class="text-xl font-semibold mb-2">Here is the third cute dog.</h3>
   </div>
 </div>

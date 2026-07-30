@@ -17,5 +17,9 @@ import { Service, Dog } from './service';
 export class App {
   private dogService = inject(Service);
 
-  dogs$: Observable<Dog[]> = this.dogService.fetchDogs();
+  dogs = this.dogService.dogs;
+
+  constructor() {
+    this.dogService.fetchDogs();
+  }
 }
