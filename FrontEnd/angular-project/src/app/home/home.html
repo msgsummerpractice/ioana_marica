@@ -34,23 +34,17 @@
   </p>
 </header>
 
-<div *ngIf="dogs().length" class="grid grid-cols-3">
-  <div class="bg-gray-200 rounded-xl text-center">
-    <img [src]="dogs()[0]" alt="First dog" class="w-200 h-100 object-cover rounded-lg" />
-    <h3 class="text-xl font-semibold mb-2">Here is the first cute dog.</h3>
-  </div>
+@if (dogs().length) {
+  <div class="grid grid-cols-3 gap-4">
+    @for (dog of dogs(); track dog; let i = $index) {
+      <div class="bg-gray-200 rounded-xl text-center">
+        <img [src]="dog" [alt]="'Dog ' + (i + 1)" class="w-200 h-100 object-cover rounded-lg" />
+        <h3 class="text-xl font-semibold mb-2">Here is the cute dog #{{ i + 1 }}.</h3>
+      </div>
+    }
 
-  <div class="bg-gray-200 rounded-xl text-center">
-    <img [src]="dogs()[1]" alt="Second dog" class="w-200 h-100 object-cover rounded-lg" />
-    <h3 class="text-xl font-semibold mb-2">Here is the second cute dog.</h3>
+    <div *appAuth class="text-l font-semibold mb-2">
+      <p>You are authenticated.</p>
+    </div>
   </div>
-
-  <div class="bg-gray-200 rounded-xl text-center">
-    <img [src]="dogs()[2]" alt="Third dog" class="w-200 h-100 object-cover rounded-lg" />
-    <h3 class="text-xl font-semibold mb-2">Here is the third cute dog.</h3>
-  </div>
-
-  <div *appAuth class="text-l font-semibold mb-2">
-    <p>You are authenticated.</p>
-  </div>
-</div>
+}

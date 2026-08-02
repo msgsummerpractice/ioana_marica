@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class Authentification {
+export class Authentication {
   isAuthentificated = signal(false);
 
   login() {

@@ -6,5 +6,5 @@ import { NotFound } from './not-found/not-found';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login', loadComponent: () => import('./login/login').then((m) => m.Login) },
-  { path: 'not-found', component: NotFound },
+  { path: '**', component: NotFound },
 ];
