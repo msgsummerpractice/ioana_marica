@@ -32,10 +32,6 @@ export class Home {
     this.dogService.fetchDogs();
   }
 
-  login() {
-    this.authentification.login();
-  }
-
   logout() {
     this.authentification.logout();
   }
