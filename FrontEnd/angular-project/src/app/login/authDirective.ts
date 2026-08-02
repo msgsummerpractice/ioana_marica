@@ -11,7 +11,7 @@ export class AuthDirective {
 
   constructor() {
     effect(() => {
-      const isAuth = this.authService.isAuthentificated();
+      const isAuth = this.authService.isAuthenticated();
       if (isAuth) {
         this.viewContainerRef.createEmbeddedView(this.templateRef);
       } else {
