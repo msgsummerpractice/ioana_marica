@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { MaskPipe } from './mask.pipe';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { LoginForm } from '../models/loginForm.model';
@@ -12,6 +13,7 @@ import { Authentication } from './authService';
 export class Login {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly auth = inject(Authentication);
+  private readonly router = inject(Router);
 
   protected readonly loginForm = this.fb.group<LoginForm>({
     email: this.fb.control('', [Validators.required, Validators.email]),
@@ -23,6 +25,7 @@ export class Login {
       console.log(this.loginForm.getRawValue());
 
       this.auth.login();
+      this.router.navigate(['/']);
     }
   }
 }
