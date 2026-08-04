@@ -1,7 +1,31 @@
-<div>
-  <h1 class="mt-2 text-4xl text-black font-semibold flex justify-center items-center">
-    Welcome Back
-  </h1>
-  <p class="mt-2 text-xl text-black">Username: {{ username | mask }}</p>
-  <p class="mt-2 text-xl text-black">Email: {{ email | mask }}</p>
-</div>
+<form novalidate [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+  <label for="email">E-Mail:</label>
+  <input type="email" id="email" formControlName="email" />
+
+  @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
+    <small class="text-error">
+      @if (loginForm.controls.email.hasError('required')) {
+        E-Mail is required.
+      }
+      @if (loginForm.controls.email.hasError('email')) {
+        Enter a valid E-Mail address.
+      }
+    </small>
+  }
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" formControlName="password" />
+
+  @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
+    <small class="text-error">
+      @if (loginForm.controls.password.hasError('required')) {
+        Password is required.
+      }
+      @if (loginForm.controls.password.hasError('minlength')) {
+        Password must contain at least 6 characters.
+      }
+    </small>
+  }
+
+  <button type="submit" [disabled]="loginForm.invalid">Login</button>
+</form>

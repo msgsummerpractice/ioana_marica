@@ -4,14 +4,14 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class Authentication {
-  isAuthentificated = signal(false);
+  isAuthenticated = signal(false);
 
   login() {
-    this.isAuthentificated.set(true);
+    this.isAuthenticated.set(true);
   }
 
   logout() {
-    this.isAuthentificated.set(false);
+    this.isAuthenticated.set(false);
   }
 
   getAuthToken() {
