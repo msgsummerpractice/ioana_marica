@@ -44,8 +44,8 @@ jobs:
           skip_app_build: true
 
           app_location: FrontEnd/angular-project/dist/angular-project/browser
-          output_location:
-          api_location:
+          output_location: ''
+          api_location: ''
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
