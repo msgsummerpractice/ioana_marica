@@ -4,11 +4,12 @@ import { NotFound } from './not-found/not-found';
 import { loginGuard } from './guards/login-guard';
 
 export const routes: Routes = [
-  { path: '', component: Home },
+  { path: '', component: Home, pathMatch: 'full' },
   {
     path: 'login',
     loadComponent: () => import('./login/login').then((m) => m.Login),
     canActivate: [loginGuard],
   },
-  { path: '**', component: NotFound },
+  { path: '404', component: NotFound },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
