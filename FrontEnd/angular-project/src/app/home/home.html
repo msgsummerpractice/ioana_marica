@@ -1,36 +1,15 @@
 <mat-toolbar-row>
   <div class="flex justify-end items-center gap-2">
-    <button matButton="filled">
-      <a href="#" class="text-black font-semibold hover:text-gray-300">
-        <mat-icon>info</mat-icon>
-      </a>
-    </button>
-
-    <button matButton="filled">
-      <a href="#" class="text-black font-semibold hover:text-gray-300">
-        <mat-icon>settings</mat-icon>
-      </a>
-    </button>
-
-    <button matButton="filled" routerLink="/">
-      <mat-icon>home</mat-icon>
-      Home
-    </button>
+    <button matButton="filled" routerLink="/"><mat-icon>home</mat-icon> Home</button>
 
     @if (!authentification.isAuthenticated()) {
-      <button matButton="filled" routerLink="/login">
-        <mat-icon>login</mat-icon>
-        Login
-      </button>
-
+      <button matButton="filled" routerLink="/login"><mat-icon>login</mat-icon> Login</button>
       <button matButton="filled" routerLink="/register">Register</button>
     }
 
     @if (authentification.isAuthenticated()) {
-      <button matButton="filled" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        Logout
-      </button>
+      <button matButton="filled" routerLink="/info"><mat-icon>info</mat-icon> Info Page</button>
+      <button matButton="filled" (click)="logout()"><mat-icon>logout</mat-icon> Logout</button>
     }
   </div>
 </mat-toolbar-row>

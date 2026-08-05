@@ -1,0 +1,21 @@
+<div class="max-w-xl mx-auto mt-12 p-6 bg-white border border-gray-200 rounded-lg">
+  <h1 class="text-xl font-bold mb-3 text-gray-800">Info Page</h1>
+
+  <p class="text-gray-600 mb-6">Autheticated succesfully!</p>
+
+  <div class="flex gap-4">
+    <a
+      routerLink="/"
+      class="px-4 py-2 bg-gray-100 border border-gray-300 rounded text-sm hover:bg-gray-200 text-gray-700 font-medium"
+    >
+      ← Home
+    </a>
+
+    <button
+      (click)="logout()"
+      class="px-4 py-2 bg-red-600 rounded text-sm text-white hover:bg-red-700 font-medium"
+    >
+      Logout
+    </button>
+  </div>
+</div>

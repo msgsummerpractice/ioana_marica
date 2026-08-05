@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
@@ -49,35 +48,32 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public SignInResponse login(SignInRequest request) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
 
         GenerateOneTimeTokenRequest ottRequest = new GenerateOneTimeTokenRequest(request.getUsername());
         OneTimeToken ott = oneTimeTokenService.generate(ottRequest);
 
-        System.out.println("Mfa code: " + ott.getTokenValue());
+        System.out.println("MFA Code for " + request.getUsername() + ": " + ott.getTokenValue());
 
-        return new SignInResponse(null, null, true,
-                "Introduce the MFA code sent.");
+        return new SignInResponse(null, null, true, "Introduce the MFA code sent.");
     }
 
     @Override
     public SignInResponse verifyMfa(MfaVerifyRequest request) {
-
         OneTimeToken consumedToken = oneTimeTokenService.consume(
-                new OneTimeTokenAuthenticationToken(request.getToken()));
+                new OneTimeTokenAuthenticationToken(request.getToken())
+        );
 
-        if (!consumedToken.getUsername().equals(request.getUsername())) {
-            throw new BadCredentialsException("Mfa code invalid for user.");
+        if (consumedToken == null || !consumedToken.getUsername().equals(request.getUsername())) {
+            throw new BadCredentialsException("MFA code invalid or expired.");
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+                userDetails, null, userDetails.getAuthorities()
+        );
 
         String token = jwtTokenProvider.generateToken(authentication);
 
@@ -90,7 +86,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponse register(UserRequest request) {
-
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateEmailException("Email already exists");
         }
@@ -103,15 +98,13 @@ public class AuthServiceImpl implements AuthService {
         user.setLastName(request.getLastName());
 
         Roles userRole = rolesRepository.findByName(Role.USER)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "Default role USER not found in database"));
+                .orElseThrow(() -> new NoSuchElementException("Default role USER not found"));
 
         Set<Roles> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);
 
         User savedUser = userRepository.save(user);
-
         return userMapper.toResponse(savedUser);
     }
 }

@@ -1,40 +1,62 @@
-<form novalidate [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-  <label for="email"> E-Mail: </label>
+<div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+  <div class="max-w-md w-full bg-white rounded-xl shadow-md p-6 border border-gray-100">
+    @if (!showMfaStep()) {
+      <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
 
-  <input type="email" id="email" formControlName="email" />
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+          <input
+            formControlName="username"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-  @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
-    <small class="text-error">
-      @if (loginForm.controls.email.hasError('required')) {
-        E-Mail is required.
-      }
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input
+            type="password"
+            formControlName="password"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-      @if (loginForm.controls.email.hasError('email')) {
-        Enter a valid E-Mail address.
-      }
-    </small>
-  }
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-300"
+        >
+          Submit
+        </button>
+      </form>
+    } @else {
+      <div class="text-center space-y-4">
+        <h2 class="text-2xl font-bold text-gray-800">MFA Verification</h2>
+        <p class="text-sm text-gray-600">
+          Enter the code printed in your server console for <strong>{{ activeUsername() }}</strong
+          >.
+        </p>
 
-  <label for="password"> Password: </label>
+        <input
+          type="text"
+          [(ngModel)]="mfaCode"
+          placeholder="Enter MFA code"
+          class="w-full text-center text-xl border border-gray-300 rounded-lg py-2 focus:ring-2 focus:ring-blue-500"
+        />
 
-  <input type="password" id="password" formControlName="password" />
+        <button
+          (click)="onVerifyMfa()"
+          [disabled]="!mfaCode.trim()"
+          class="w-full bg-green-600 text-white font-medium py-2 rounded-lg hover:bg-green-700 transition disabled:bg-gray-300"
+        >
+          Verify Code
+        </button>
+      </div>
+    }
 
-  @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
-    <small class="text-error">
-      @if (loginForm.controls.password.hasError('required')) {
-        Password is required.
-      }
-
-      @if (loginForm.controls.password.hasError('minlength')) {
-        Password must contain at least 6 characters.
-      }
-    </small>
-  }
-
-  <button type="submit" [disabled]="loginForm.invalid">Login</button>
-</form>
-
-<p>
-  Don't have an account?
-  <a routerLink="/register"> Register </a>
-</p>
+    <p class="text-center text-sm text-gray-500 mt-6">
+      Don't have an account?
+      <a routerLink="/register" class="text-blue-600 font-semibold hover:underline">Register</a>
+    </p>
+  </div>
+</div>

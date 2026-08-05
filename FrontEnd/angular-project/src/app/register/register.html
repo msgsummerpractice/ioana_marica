@@ -1,29 +1,88 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
-  <label> Username: </label>
+<form
+  [formGroup]="registerForm"
+  (ngSubmit)="onSubmit()"
+  class="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg space-y-4"
+>
+  <h2 class="text-2xl font-bold text-center text-gray-800">Create account</h2>
 
-  <input formControlName="username" />
+  <div>
+    <label class="block text-sm font-medium text-gray-700"> Username: </label>
 
-  <label> Email: </label>
+    <input
+      formControlName="username"
+      class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-blue-500"
+    />
 
-  <input type="email" formControlName="email" />
+    @if (registerForm.controls.username.invalid && registerForm.controls.username.touched) {
+      <small class="text-red-500"> Username is required. </small>
+    }
+  </div>
 
-  <label> Password: </label>
+  <div>
+    <label class="block text-sm font-medium text-gray-700"> Email: </label>
 
-  <input type="password" formControlName="password" />
+    <input
+      type="email"
+      formControlName="email"
+      class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-blue-500"
+    />
 
-  <label> First name: </label>
+    @if (registerForm.controls.email.invalid && registerForm.controls.email.touched) {
+      <small class="text-red-500">
+        @if (registerForm.controls.email.hasError('required')) {
+          Email is required.
+        }
 
-  <input formControlName="firstName" />
+        @if (registerForm.controls.email.hasError('email')) {
+          Enter a valid email.
+        }
+      </small>
+    }
+  </div>
 
-  <label> Last name: </label>
+  <div>
+    <label class="block text-sm font-medium text-gray-700"> Password: </label>
 
-  <input formControlName="lastName" />
+    <input
+      type="password"
+      formControlName="password"
+      class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-blue-500"
+    />
 
-  <button type="submit" [disabled]="registerForm.invalid">Register</button>
+    @if (registerForm.controls.password.invalid && registerForm.controls.password.touched) {
+      <small class="text-red-500"> Password must contain at least 6 characters. </small>
+    }
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700"> First name: </label>
+
+    <input
+      formControlName="firstName"
+      class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700"> Last name: </label>
+
+    <input
+      formControlName="lastName"
+      class="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="registerForm.invalid"
+    class="w-full rounded-lg bg-green-600 py-2 text-white font-semibold hover:bg-green-700 disabled:bg-gray-400"
+  >
+    Register
+  </button>
 </form>
 
-<p>
+<p class="mt-4 text-center text-gray-600">
   Already have an account?
 
-  <a routerLink="/login"> Login </a>
+  <a routerLink="/login" class="text-blue-600 hover:underline font-medium"> Login </a>
 </p>
