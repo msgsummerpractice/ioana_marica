@@ -11,5 +11,5 @@ export const routes: Routes = [
     canActivate: [loginGuard],
   },
   { path: '404', component: NotFound },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
