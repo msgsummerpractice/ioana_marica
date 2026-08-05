@@ -1,5 +1,5 @@
 <mat-toolbar-row>
-  <div class="flex justify-end items-center">
+  <div class="flex justify-end items-center gap-2">
     <button matButton="filled">
       <a href="#" class="text-black font-semibold hover:text-gray-300">
         <mat-icon>info</mat-icon>
@@ -12,17 +12,26 @@
       </a>
     </button>
 
-    <button matButton="filled">
-      <a href="#" class="text-black font-semibold hover:text-gray-300">
-        <mat-icon>home</mat-icon>
-      </a>
+    <button matButton="filled" routerLink="/">
+      <mat-icon>home</mat-icon>
+      Home
     </button>
 
-    <button matButton="filled" routerLink="/login">
-      <mat-icon>login</mat-icon>
-      Login
-    </button>
-    <button matButton="filled" (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
+    @if (!authentification.isAuthenticated()) {
+      <button matButton="filled" routerLink="/login">
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+
+      <button matButton="filled" routerLink="/register">Register</button>
+    }
+
+    @if (authentification.isAuthenticated()) {
+      <button matButton="filled" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    }
   </div>
 </mat-toolbar-row>
 
@@ -39,6 +48,7 @@
     @for (dog of dogs(); track dog; let i = $index) {
       <div class="bg-gray-200 rounded-xl text-center">
         <img [src]="dog" [alt]="'Dog ' + (i + 1)" class="w-200 h-100 object-cover rounded-lg" />
+
         <h3 class="text-xl font-semibold mb-2">Here is the cute dog #{{ i + 1 }}.</h3>
       </div>
     }

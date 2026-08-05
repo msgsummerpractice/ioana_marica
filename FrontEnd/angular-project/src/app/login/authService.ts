@@ -1,20 +1,36 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Authentication {
-  isAuthenticated = signal(false);
+  private http = inject(HttpClient);
 
-  login() {
-    this.isAuthenticated.set(true);
+  isAuthenticated = signal(!!localStorage.getItem('token'));
+
+  login(email: string, password: string) {
+    return this.http
+      .post<any>('http://localhost:8080/api/auth/login', {
+        email,
+        password,
+      })
+      .pipe(
+        tap((response) => {
+          localStorage.setItem('token', response.token);
+
+          this.isAuthenticated.set(true);
+        }),
+      );
+  }
+
+  register(user: any) {
+    return this.http.post<any>('http://localhost:8080/api/auth/register', user);
   }
 
   logout() {
     this.isAuthenticated.set(false);
-  }
-
-  getAuthToken() {
-    return 'your-auth-token';
+    localStorage.removeItem('token');
   }
 }

@@ -24,7 +24,7 @@ import { Service } from '../dogService';
 })
 export class Home {
   private dogService = inject(Service);
-  private authentification = inject(Authentication);
+  protected authentification = inject(Authentication);
 
   dogs = this.dogService.dogs;
 

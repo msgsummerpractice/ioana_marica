@@ -21,11 +21,26 @@ export class Login {
   });
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      console.log(this.loginForm.getRawValue());
-
-      this.auth.login();
-      this.router.navigate(['/']);
+    if (this.loginForm.invalid) {
+      return;
     }
+
+    const { email, password } = this.loginForm.getRawValue();
+
+    this.auth.login(email, password).subscribe({
+      next: (response) => {
+        console.log(response);
+
+        localStorage.setItem('token', response.token);
+
+        this.auth.isAuthenticated.set(true);
+
+        this.router.navigate(['/']);
+      },
+
+      error: (err) => {
+        console.log('Login failed', err);
+      },
+    });
   }
 }

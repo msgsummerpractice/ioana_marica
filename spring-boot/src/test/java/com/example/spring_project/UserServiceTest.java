@@ -7,6 +7,8 @@ import com.example.spring_project.model.Roles;
 import com.example.spring_project.model.User;
 import com.example.spring_project.repository.UserRepository;
 import com.example.spring_project.service.UserServiceImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,17 +29,27 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-        @Mock
-        private UserRepository userRepository;
+    @Mock
+    private UserRepository userRepository;
 
-        private UserMapper userMapper;
-        private UserServiceImpl userService;
+    private UserMapper userMapper;
+    private UserServiceImpl userService;
+    private PasswordEncoder passwordEncoder;
 
-        @BeforeEach
-        void setUp() {
-                userMapper = new UserMapper();
-                userService = new UserServiceImpl(userRepository, userMapper);
-        }
+
+    @BeforeEach
+    void setUp() {
+
+        userMapper = new UserMapper();
+
+        passwordEncoder = new BCryptPasswordEncoder();
+
+        userService = new UserServiceImpl(
+                userRepository,
+                userMapper,
+                passwordEncoder
+        );
+    }
 
         private Roles createRole(Long id, Role name) {
                 Roles role = new Roles();

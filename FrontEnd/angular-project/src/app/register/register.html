@@ -1,0 +1,29 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
+  <label> Username: </label>
+
+  <input formControlName="username" />
+
+  <label> Email: </label>
+
+  <input type="email" formControlName="email" />
+
+  <label> Password: </label>
+
+  <input type="password" formControlName="password" />
+
+  <label> First name: </label>
+
+  <input formControlName="firstName" />
+
+  <label> Last name: </label>
+
+  <input formControlName="lastName" />
+
+  <button type="submit" [disabled]="registerForm.invalid">Register</button>
+</form>
+
+<p>
+  Already have an account?
+
+  <a routerLink="/login"> Login </a>
+</p>
