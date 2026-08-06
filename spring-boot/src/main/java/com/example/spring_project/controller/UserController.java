@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://purple-grass-0cc8b9b0f.7.azurestaticapps.net")
 @RestController
 @RequestMapping("/users")
 public class UserController {

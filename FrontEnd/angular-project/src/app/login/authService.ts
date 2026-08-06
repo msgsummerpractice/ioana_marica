@@ -17,15 +17,21 @@ export class Authentication {
   isAuthenticated = signal<boolean>(!!localStorage.getItem('token'));
 
   login(username: string, password: string) {
-    return this.http.post<SignInResponse>('http://localhost:8080/api/auth/login', {
-      username,
-      password,
-    });
+    return this.http.post<SignInResponse>(
+      'https://containerapp-backend.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/login',
+      {
+        username,
+        password,
+      },
+    );
   }
 
   verifyMfa(username: string, token: string) {
     return this.http
-      .post<SignInResponse>('http://localhost:8080/api/auth/mfa/verify', { username, token })
+      .post<SignInResponse>(
+        'https://containerapp-backend.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/mfa/verify',
+        { username, token },
+      )
       .pipe(
         tap((response) => {
           if (response.token) {
@@ -37,7 +43,10 @@ export class Authentication {
   }
 
   register(user: any) {
-    return this.http.post<any>('http://localhost:8080/api/auth/register', user);
+    return this.http.post<any>(
+      'https://containerapp-backend.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/register',
+      user,
+    );
   }
 
   logout() {
