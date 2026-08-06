@@ -18,7 +18,7 @@ export class Authentication {
 
   login(username: string, password: string) {
     return this.http.post<SignInResponse>(
-      'https://containerapp-backend.internal.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/login',
+      'https://containerapp-backend.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/login',
       {
         username,
         password,
@@ -29,7 +29,7 @@ export class Authentication {
   verifyMfa(username: string, token: string) {
     return this.http
       .post<SignInResponse>(
-        'https://containerapp-backend.internal.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/mfa/verify',
+        'https://containerapp-backend.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/mfa/verify',
         { username, token },
       )
       .pipe(
@@ -44,7 +44,7 @@ export class Authentication {
 
   register(user: any) {
     return this.http.post<any>(
-      'https://containerapp-backend.internal.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/register',
+      'https://containerapp-backend.victoriouswater-2091a1a2.westeurope.azurecontainerapps.io/api/auth/register',
       user,
     );
   }
