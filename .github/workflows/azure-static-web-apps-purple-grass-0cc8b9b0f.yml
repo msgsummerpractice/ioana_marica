@@ -1,13 +1,13 @@
 name: Azure Static Web Apps CI/CD
 
-# on:
-#   push:
-#     branches:
-#       - day3CloudTraining
-#   pull_request:
-#     types: [opened, synchronize, reopened, closed]
-#     branches:
-#       - day3CloudTraining
+ on:
+  push:
+    # branches:
+    #   - day3CloudTraining
+  # pull_request:
+  #   types: [opened, synchronize, reopened, closed]
+    # branches:
+    #   - day3CloudTraining
 
 jobs:
   build_and_deploy_job:
